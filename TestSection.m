@@ -1,4 +1,4 @@
-classdef (Abstract) TestSection < matlab.mixin.Heterogeneous % Inheriting from this lets me use property validation
+classdef (Abstract) TestSection < handle & matlab.mixin.Heterogeneous % Inheriting from this lets me use property validation
     
     properties
         Name char
@@ -9,8 +9,8 @@ classdef (Abstract) TestSection < matlab.mixin.Heterogeneous % Inheriting from t
             obj.Name = name;
         end
         
-        function doStuffWithData(obj, app, data, lb, ub, parent_indices, runOptions) % Need to pass lb and ub in in case this test is repeated...
-            
+        function return_struct = doStuffWithData(obj, app, data, lb, ub, parent_indices, runOptions) % Need to pass lb and ub in in case this test is repeated...
+            return_struct = struct();
         end
     end
     

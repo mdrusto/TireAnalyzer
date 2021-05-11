@@ -1,14 +1,14 @@
 % Script to display the data for a single tire data file
 
-file_name = 'TTC Tire Data/B1654raw21.mat';
-runnum_cell = extractBetween(file_name, 'raw', '.');
+file_name = 'TTC Tire Data/B1051run7.mat';
+runnum_cell = extractBetween(file_name, 'run', '.');
 runnum = runnum_cell{1};
 
 data = load(file_name);
 
 len = length(data.ET);
 
-offset = 0;
+offset = 25939;
 
 figure
 scatter((1:len)+offset, data.SA, 5);

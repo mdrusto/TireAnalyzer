@@ -1,4 +1,4 @@
-classdef TestFormat
+classdef TestFormat < handle
     
     properties
         RoundNum uint8

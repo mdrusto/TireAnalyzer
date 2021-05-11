@@ -7,8 +7,8 @@ PSI_TO_KPA = 6.89476;
 
 LBFT_TO_NM = LBS_TO_N * FT_TO_M;
 
-round_id = '1051';
-run_num = '41';
+round_id = '1052';
+run_num = 10';
 old_file_name = ['TTC Tire Data/' round_id 'run' run_num '.mat'];
 old = load(old_file_name);
 AMBTMP = F_to_C(old.AMBTMP);
@@ -33,7 +33,7 @@ TSTO = F_to_C(old.TSTO);
 V = old.V * MPH_TO_KMH;
 tireid = old.tireid;
 
-save(['TTC Tire Data/B1052run' run_num '.mat'], 'AMBTMP', 'ET', 'FX', 'FY', 'FZ', 'IA', 'MX', 'N', 'NFY', 'P', 'RE', 'RL', 'RST', 'SA', 'SR', 'TSTC', 'TSTI', 'TSTO', 'V', 'tireid');
+save(['TTC Tire Data/B1052run' run_num '.mat'], 'AMBTMP', 'ET', 'FX', 'FY', 'FZ', 'IA', 'MX', 'MZ', 'N', 'NFY', 'P', 'RE', 'RL', 'RST', 'SA', 'SR', 'TSTC', 'TSTI', 'TSTO', 'V', 'tireid');
 delete(old_file_name);
 
 function temp_C = F_to_C(temp_F)

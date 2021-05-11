@@ -19,7 +19,7 @@ classdef TestSectionGap < TestSection
             for i = (start_index + 1):length(data_sel)
                 if abs(data_sel(i) - obj.Value) < obj.Threshold
                     ub = i - 1;
-                    disp(['Test: ' obj.Name ', UB: ' num2str(ub)]);
+                    %disp(['Test: ' obj.Name ', UB: ' num2str(ub)]);
                     return
                 end
             end

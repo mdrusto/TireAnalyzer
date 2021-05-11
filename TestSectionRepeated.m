@@ -16,14 +16,15 @@ classdef TestSectionRepeated < TestSectionNested
             
             for i = 1:obj.nTimes % Iterate over the number of repeated test groups
                 for j = 1:n_tests % Iterate inside each repeated group, for each individual test
+                    new_indices = [parent_indices, i, j];
                     
                     % Get the upper bound for this test
                     %disp(['Iteration #' num2str(i) ', Test #' num2str(j)]);
                     ub_ij = obj.NestedTests(j).getUpperBound(data, start_index);
                     
                     % Record the bounds for later
-                    obj.NestedLowerBounds(parent_indices, i, j) = start_index + 1;
-                    obj.NestedUpperBounds(parent_indices, i, j) = ub_ij;
+                    setNestedLB(obj, new_indices, start_index + 1);
+                    setNestedUB(obj, new_indices, ub_ij);
                     
                     start_index = ub_ij + 1; % Start index for next nested test
                     disp(['Test: ' obj.Name ' #' num2str(i) ', UB: ' num2str(ub_ij)]);
