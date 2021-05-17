@@ -35,6 +35,8 @@ classdef CamberVaryingTestSection < TestSectionRepeatedWSpec
                 'mz_C', zeros(6, n_loads, n_times), ...
                 'nfy_exitflags', zeros(n_loads, n_times), ...
                 'mz_exitflags', zeros(n_loads, n_times), ...
+                'nfy_sample_points', zeros(n_sa_sample, n_loads, n_times), ...
+                'mz_sample_points', zeros(n_sa_sample, n_loads, n_times), ...
                 'nfy_load_poly_coeff', 0, ...
                 'mz_load_poly_coeff', 0, ...
                 'nfy_vals', zeros(n_sa_sample, n_load_sample, n_times), ...
@@ -94,18 +96,18 @@ classdef CamberVaryingTestSection < TestSectionRepeatedWSpec
             
             app.LatCamberLUTData.ia_options = ia_options;
             
-            app.LatCamberLUTData.nfy_vals(:, :, :) = app.LatCamberLUTData.nfy_vals(:, :, order);
-            app.LatCamberLUTData.mz_vals(:, :, :) = app.LatCamberLUTData.mz_vals(:, :, order);
             app.LatCamberLUTData.sa_data = reorder2DCellDim2(app.LatCamberLUTData.sa_data, order);
             app.LatCamberLUTData.fz_data = reorder2DCellDim2(app.LatCamberLUTData.fz_data, order);
             app.LatCamberLUTData.nfy_data = reorder2DCellDim2(app.LatCamberLUTData.nfy_data, order);
             app.LatCamberLUTData.mz_data = reorder2DCellDim2(app.LatCamberLUTData.mz_data, order);
-            app.LatCamberLUTData.nfy_sample_points(:, :, :) = app.LatCamberLUTData.nfy_sample_points(:, :, order);
-            app.LatCamberLUTData.mz_sample_points(:, :, :) = app.LatCamberLUTData.mz_sample_points(:, :, order);
-            app.LatCamberLUTData.nfy_C(:, :, :) = app.LatCamberLUTData.nfy_C(:, :, order);
-            app.LatCamberLUTData.mz_C(:, :, :) = app.LatCamberLUTData.mz_C(:, :, order);
-            app.LatCamberLUTData.nfy_exitflags(:, :) = app.LatCamberLUTData.nfy_exitflags(:, order);
-            app.LatCamberLUTData.mz_exitflags(:, :) = app.LatCamberLUTData.mz_exitflags(:, order);
+            app.LatCamberLUTData.nfy_C = app.LatCamberLUTData.nfy_C(:, :, order);
+            app.LatCamberLUTData.mz_C = app.LatCamberLUTData.mz_C(:, :, order);
+            app.LatCamberLUTData.nfy_exitflags = app.LatCamberLUTData.nfy_exitflags(:, order);
+            app.LatCamberLUTData.mz_exitflags = app.LatCamberLUTData.mz_exitflags(:, order);
+            app.LatCamberLUTData.nfy_sample_points = app.LatCamberLUTData.nfy_sample_points(:, :, order);
+            app.LatCamberLUTData.mz_sample_points = app.LatCamberLUTData.mz_sample_points(:, :, order);
+            app.LatCamberLUTData.nfy_vals = app.LatCamberLUTData.nfy_vals(:, :, order);
+            app.LatCamberLUTData.mz_vals = app.LatCamberLUTData.mz_vals(:, :, order);
             
             return_struct = struct();
         end

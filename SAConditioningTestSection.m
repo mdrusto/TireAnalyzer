@@ -10,4 +10,3 @@ classdef SAConditioningTestSection < TestSection
         end
     end
 end
-

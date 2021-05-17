@@ -89,6 +89,8 @@ classdef LoadsTestSection < TestSectionRepeatedWSpec
             mean_loads = -mean_loads;
             [mean_loads, order] = sort(mean_loads);
             fz_options = round(mean_loads);
+            disp('Mean loads:')
+            disp(mean_loads)
             % Re-order based on load order
             sa_data = sa_data(order);
             fz_data = sa_data(order);
@@ -109,8 +111,8 @@ classdef LoadsTestSection < TestSectionRepeatedWSpec
                 %disp(nfy_sample_points(k, :)')
                 %disp(fit_order)
                 nfy_load_poly_coeff(:, k) = polyfit(mean_loads, nfy_sample_points(k, :)', fit_order);
-                disp('Mean loads:')
-                disp(mean_loads)
+                %disp('Mean loads:')
+                %disp(mean_loads)
                 mz_load_poly_coeff(:, k) = polyfit(mean_loads, mz_sample_points(k, :)', fit_order);
                 % Generate values from these polynomials
                 nfy_vals(k, :) = polyval(nfy_load_poly_coeff(:, k), load_sample_vals);

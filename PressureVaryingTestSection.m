@@ -89,6 +89,8 @@ classdef PressureVaryingTestSection < TestSectionRepeatedWSpec
                 end
             end
             
+            % Display pressure in psi not kPa
+            p_options = p_options * 0.145038;
             p_options = round(p_options);
             [p_options, order] = sort(p_options);
             

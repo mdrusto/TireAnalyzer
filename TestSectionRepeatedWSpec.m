@@ -39,9 +39,9 @@ classdef TestSectionRepeatedWSpec < TestSectionNested
                     %disp(['Found where its set, lb is: ' num2str(start_index + 1)]);
                     
                     if isa(obj, 'CamberVaryingTestSection') && i == 1 && j == 1
-                        disp(['Set bound at 1, 1: ' num2str(start_index + 1)])
-                        disp('Getting bound:')
-                        disp(getNestedLB(obj, new_indices))
+                        %disp(['Set bound at 1, 1: ' num2str(start_index + 1)])
+                        %disp('Getting bound:')
+                        %disp(getNestedLB(obj, new_indices))
                     end
                     
                     if isa(obj, 'PressureVaryingTestSection')
@@ -51,7 +51,7 @@ classdef TestSectionRepeatedWSpec < TestSectionNested
                     obj.NestedTests(j) = test;
                     
                     start_index = ub_ij; % Start index for next nested test
-                    disp(['Test: ' obj.Name ' #' num2str(i) ' [' num2str(new_indices) '], nested test #' num2str(j) ', UB: ' num2str(ub_ij) ', lb(i): ' num2str(lb(i)) ', ub(i): ' num2str(ub(i))]);
+                    disp(['Test: ' obj.Name ' #' num2str(i) ', nested test #' num2str(j) ', UB: ' num2str(ub_ij) ', lb(i): ' num2str(lb(i)) ', ub(i): ' num2str(ub(i))]);
                 end
                 if ub_ij >= ub(i)
                     ub_ij = ub(i);

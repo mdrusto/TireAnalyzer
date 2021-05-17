@@ -13,7 +13,7 @@ classdef SAConditioningTestSectionSpec < SAConditioningTestSection
         end
         
         function ub = getUpperBound(obj, data, start_index, ~)
-            [~, ub] = group_data_avg(data.FZ, obj.Val, obj.Threshold, start_index);
+            [~, ub] = group_data_avg(data.FZ, obj.Val, obj.Threshold, start_index + 200);
         end
     end
 end

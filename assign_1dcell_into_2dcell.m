@@ -1,4 +1,4 @@
-function result = assign_1dcell_into_2dcell(assign_to, assign_from, n)
+function result = assign_1dcell_into_2dcell(assign_to, assign_from, column)
     if ~isvector(assign_from)
         error('Matt error: assign_from is not a vector');
     elseif size(assign_to, 1) ~= length(assign_from)
@@ -6,7 +6,7 @@ function result = assign_1dcell_into_2dcell(assign_to, assign_from, n)
     end
     n_rows = size(assign_to, 1);
     for i = 1:n_rows
-        assign_to{i, n} = assign_from{i};
+        assign_to{i, column} = assign_from{i};
         %disp(['Set column n=' num2str(n) ', row i=' num2str(i) ' to:'])
         %disp(assign_from{i}(1:4))
         %disp(assign_to)

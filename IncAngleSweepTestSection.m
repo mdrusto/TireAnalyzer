@@ -5,7 +5,7 @@ classdef IncAngleSweepTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index)
+        function ub = getUpperBound(~, data, start_index, ~)
             n_crossings = 0;
             within_threshold = false;
             for i = (start_index + 1):length(data.IA) % Loop over remaining data

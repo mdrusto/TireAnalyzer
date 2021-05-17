@@ -2,12 +2,8 @@ classdef TestSectionNested < TestSection
     
     properties
         NestedTests TestSection
-        NestedLowerBounds cell
-        NestedUpperBounds cell
-    end
-    
-    properties (Access = private)
-        
+        NestedLowerBounds double
+        NestedUpperBounds double
     end
     
     methods
@@ -41,8 +37,8 @@ classdef TestSectionNested < TestSection
                 obj.NestedTests(i).doStuffWithData( ...
                     app, ...
                     data, ...
-                    obj.NestedLowerBounds(new_indices), ...
-                    obj.NestedUpperBounds(new_indices), ...
+                    getNestedLB(obj, new_indices), ...
+                    getNestedUB(obj, new_indices), ...
                     new_indices, ...
                     runOptions);
             end
@@ -56,7 +52,7 @@ classdef TestSectionNested < TestSection
             end
             %indices
             indices_cell = num2cell(indices);
-            lb = obj.NestedLowerBounds{indices_cell{:}};
+            lb = obj.NestedLowerBounds(indices_cell{:});
             if isempty(lb)
                 error(['Matt error: Empty LB at [' num2str(indices) ']'])
             end
@@ -72,7 +68,7 @@ classdef TestSectionNested < TestSection
                 error(['Matt error: indices outside of bounds. Indices: ' num2str(indices{:}) ', size of bounds: ' num2str(bound_size)]);
             end
             indices = num2cell(indices);
-            ub = obj.NestedUpperBounds{indices{:}};
+            ub = obj.NestedUpperBounds(indices{:});
             if isempty(ub)
                 error(['Matt error: Empty UB at [' num2str(indices) ']'])
             end
@@ -85,27 +81,20 @@ classdef TestSectionNested < TestSection
             if ~isscalar(value)
                 error(['Matt error: non-scalar argument: ' string(value)])
             end
-            if isempty(obj.NestedLowerBounds)
-                disp('EMPTY')
-                obj.NestedLowerBounds = cell(1);
-            end
-%             disp(obj.NestedLowerBounds)
-%             disp(value)
-%             disp(indices)
             indices = num2cell(indices);
-            obj.NestedLowerBounds{indices{:}} = value;
+            obj.NestedLowerBounds(indices{:}) = value;
         end
         
         function setNestedUB(obj, indices, value)
             if ~isscalar(value)
                 error(['Matt error: non-scalar argument: ' string(value)])
             end
-            if isempty(obj.NestedUpperBounds) 
-                disp('EMPTY')
-                obj.NestedLowerBounds = cell(1);
-            end
+            %if isempty(obj.NestedUpperBounds) 
+            %    disp('EMPTY')
+            %    obj.NestedLowerBounds = cell(1);
+            %end
             indices = num2cell(indices);
-            obj.NestedUpperBounds{indices{:}} = value;
+            obj.NestedUpperBounds(indices{:}) = value;
         end
     end
 end
