@@ -25,8 +25,10 @@ classdef SASweepTestSection < TestSection
             sa_data_scaled_rad = deg2rad(sa_data_scaled);
             
             % Fit the data and get the coeffients and exit flags
-            [nfy_C, nfy_exitflag] = fit_pacejka(sa_data_scaled_rad, nfy_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations);
-            [mz_C, mz_exitflag] = fit_pacejka(sa_data_scaled_rad, mz_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations);
+            C0_nfy = [13, 0.2, 15, 1, 0, 0];
+            C0_mz = [40, 0.08, 440, 1.2, 0, 0];
+            [nfy_C, nfy_exitflag] = fit_pacejka(sa_data_scaled_rad, nfy_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations, C0_nfy);
+            [mz_C, mz_exitflag] = fit_pacejka(sa_data_scaled_rad, mz_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations, C0_mz);
             
             % Take sample points
             sa_sample_vals = run_opts.SASampleVals;

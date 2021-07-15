@@ -89,8 +89,8 @@ classdef LoadsTestSection < TestSectionRepeatedWSpec
             mean_loads = -mean_loads;
             [mean_loads, order] = sort(mean_loads);
             fz_options = round(mean_loads);
-            disp('Mean loads:')
-            disp(mean_loads)
+            %disp('Mean loads:')
+            %disp(mean_loads)
             % Re-order based on load order
             sa_data = sa_data(order);
             fz_data = sa_data(order);

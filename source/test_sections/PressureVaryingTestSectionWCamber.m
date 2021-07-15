@@ -53,7 +53,7 @@ classdef PressureVaryingTestSectionWCamber < TestSectionRepeatedWSpec
                 'p_options', zeros(n_times, 1));
             
             for i = 1:n_times
-                disp(['Pressure #' num2str(i)])
+                %disp(['Pressure #' num2str(i)])
                 for j = 1:n_tests
                     new_indices = [parent_indices, i, j];
                     test = obj.NestedTests(j);
