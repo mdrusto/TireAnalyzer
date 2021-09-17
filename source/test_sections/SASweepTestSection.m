@@ -5,49 +5,49 @@ classdef SASweepTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index, ~)
-            [~, ub] = group_data_diff(data.SA, 1, 1, start_index);
+        function ub = getUpperBound(~, data, startIndex, ~)
+            [~, ub] = groupDataDiff(data.SA, 1, 1, startIndex);
         end
         
-        function return_struct = doStuffWithData(~, ~, data, lb, ub, ~, run_opts)
+        function returnStruct = doStuffWithData(~, ~, data, lb, ub, ~, runOpts)
             % Get all the relevant data
-            sa_data = data.SA(lb:ub);
-            nfy_data = data.NFY(lb:ub);
-            mz_data = data.MZ(lb:ub);
-            fz_data = data.FZ(lb:ub);
+            saData = data.SA(lb:ub);
+            nfyData = data.NFY(lb:ub);
+            mzData = data.MZ(lb:ub);
+            fzData = data.FZ(lb:ub);
             
             % Apply scaling factors
-            sa_data_scaled = sa_data*run_opts.XScalingFactor;
-            nfy_data_scaled = nfy_data*run_opts.YScalingFactor;
-            mz_data_scaled = mz_data*run_opts.YScalingFactor;
+            saDataScaled = saData*runOpts.XScalingFactor;
+            nfyDataScaled = nfyData*runOpts.YScalingFactor;
+            mzDataScaled = mzData*runOpts.YScalingFactor;
             
             % Convert to radians
-            sa_data_scaled_rad = deg2rad(sa_data_scaled);
+            saDataScaledRad = deg2rad(saDataScaled);
             
             % Fit the data and get the coeffients and exit flags
             C0_nfy = [13, 0.2, 15, 1, 0, 0];
             C0_mz = [40, 0.08, 440, 1.2, 0, 0];
-            [nfy_C, nfy_exitflag] = fit_pacejka(sa_data_scaled_rad, nfy_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations, C0_nfy);
-            [mz_C, mz_exitflag] = fit_pacejka(sa_data_scaled_rad, mz_data_scaled, run_opts.PacejkaAlgorithm, run_opts.PacejkaMaxIterations, C0_mz);
+            [nfyC, nfyExitFlag] = fitPacejka(saDataScaledRad, nfyDataScaled, runOpts.PacejkaAlgorithm, runOpts.PacejkaMaxIterations, C0_nfy);
+            [mzC, mzExitFlag] = fitPacejka(saDataScaledRad, mzDataScaled, runOpts.PacejkaAlgorithm, runOpts.PacejkaMaxIterations, C0_mz);
             
             % Take sample points
-            sa_sample_vals = run_opts.SASampleVals;
-            sa_sample_vals_rad = deg2rad(sa_sample_vals);
-            nfy_sample_points = pacejka(nfy_C, sa_sample_vals_rad);
-            mz_sample_points = pacejka(mz_C, sa_sample_vals_rad);
+            saSampleVals = runOpts.SASampleVals;
+            saSampleValsRad = deg2rad(saSampleVals);
+            nfySamplePoints = pacejka(nfyC, saSampleValsRad);
+            mzSamplePoints = pacejka(mzC, saSampleValsRad);
             
             % Include all the relevant info in the return array
-            return_struct.sa_data = sa_data_scaled;
-            return_struct.nfy_data = nfy_data_scaled;
-            return_struct.mz_data = mz_data_scaled;
-            return_struct.fz_data = fz_data;
-            return_struct.nfy_C = nfy_C;
-            return_struct.nfy_exitflag = nfy_exitflag;
-            return_struct.mz_C = mz_C;
-            return_struct.mz_exitflag = mz_exitflag;
-            return_struct.sa_sample_vals = sa_sample_vals;
-            return_struct.nfy_sample_points = nfy_sample_points;
-            return_struct.mz_sample_points = mz_sample_points;
+            returnStruct.saData = saDataScaled;
+            returnStruct.nfyData = nfyDataScaled;
+            returnStruct.mzData = mzDataScaled;
+            returnStruct.fzData = fzData;
+            returnStruct.nfyC = nfyC;
+            returnStruct.nfyExitFlag = nfyExitFlag;
+            returnStruct.mzC = mzC;
+            returnStruct.mzExitFlag = mzExitFlag;
+            returnStruct.saSampleVals = saSampleVals;
+            returnStruct.nfySamplePoints = nfySamplePoints;
+            returnStruct.mzSamplePoints = mzSamplePoints;
         end
     end
 end

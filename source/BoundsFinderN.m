@@ -11,8 +11,8 @@ classdef BoundsFinderN < BoundsFinder
             obj.Threshold = threshold;
         end
         
-        function [lb, ub] = getBounds(obj, data, start_index)
-            [lb, ub] = group_data_diff(data, obj.NumGroups, obj.Threshold, start_index);
+        function [lb, ub] = getBounds(obj, data, startIndex)
+            [lb, ub] = groupDataDiff(data, obj.NumGroups, obj.Threshold, startIndex);
         end
         
         function n = getN(obj)

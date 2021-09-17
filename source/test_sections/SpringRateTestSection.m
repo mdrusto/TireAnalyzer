@@ -5,9 +5,9 @@ classdef SpringRateTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index, ~)
-            [~, ub_array] = group_data_diff(data.FZ, 5, 200, start_index);
-            ub = ub_array(5);
+        function ub = getUpperBound(~, data, startIndex, ~)
+            [~, ubArray] = groupDataDiff(data.FZ, 5, 200, startIndex);
+            ub = ubArray(5);
         end
     end
 end

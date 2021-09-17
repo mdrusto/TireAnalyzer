@@ -10,36 +10,36 @@ classdef BreakInTestSection < TestSection
             obj.NCrossings = nCrossings;
         end
         
-        function ub = getUpperBound(obj, data, start_index, ~)
-            n_crossings = 0;
-            n_points = 0;
-            within_threshold = false;
-            for i = (start_index + 1):length(data.IA) % Loop over remaining data
+        function ub = getUpperBound(obj, data, startIndex, ~)
+            nCrossings = 0;
+            nPoints = 0;
+            withinThreshold = false;
+            for i = (startIndex + 1):length(data.IA) % Loop over remaining data
                 if abs(data.IA(i)) < 0.5
-                    if ~within_threshold
+                    if ~withinThreshold
                         % Only set the flag if this is the 10th successive point in a row
-                        if n_points == 10
+                        if nPoints == 10
                             % Update the counter and flag
-                            n_crossings = n_crossings + 1;
-                            if n_crossings == obj.NCrossings
+                            nCrossings = nCrossings + 1;
+                            if nCrossings == obj.NCrossings
                                 ub = i - 10;
                                 return;
                             end
-                            n_points = 0;
+                            nPoints = 0;
                             % Update the flag if this isn't the final crossing
-                            within_threshold = true;
+                            withinThreshold = true;
                         else
-                            n_points = n_points + 1;
+                            nPoints = nPoints + 1;
                         end
                     end % Do nothing if already inside threshold
                 else
-                    if within_threshold
-                        if n_points == 10
+                    if withinThreshold
+                        if nPoints == 10
                             % Reset the flag
-                            within_threshold = false;
-                            n_points = 0;
+                            withinThreshold = false;
+                            nPoints = 0;
                         else
-                            n_points = n_points + 1;
+                            nPoints = nPoints + 1;
                         end
                     end
                 end

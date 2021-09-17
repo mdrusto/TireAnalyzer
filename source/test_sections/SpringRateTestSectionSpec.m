@@ -12,9 +12,9 @@ classdef SpringRateTestSectionSpec < SpringRateTestSection
             obj.Threshold = threshold;
         end
         
-        function ub = getUpperBound(obj, data, start_index, ~)
-            [~, ub_array] = group_data_avg(data.FZ, obj.Vals, obj.Threshold, start_index);
-            ub = ub_array(end);
+        function ub = getUpperBound(obj, data, startIndex, ~)
+            [~, ubArray] = groupDataAvg(data.FZ, obj.Vals, obj.Threshold, startIndex);
+            ub = ubArray(end);
         end
     end
 end

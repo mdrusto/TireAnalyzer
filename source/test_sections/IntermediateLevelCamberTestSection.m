@@ -5,126 +5,126 @@ classdef IntermediateLevelCamberTestSection < TestSectionRepeatedWSpec
             obj@TestSectionRepeatedWSpec(name, varName, bFinder, tests);
         end
         
-        function return_struct = doStuffWithData(obj, app, data, ~, ~, parent_indices, run_opts)
-            n_times = obj.BFinder.getN();
-            n_tests = length(obj.NestedTests);
-            n_loads = 0;
-            n_sa_sample = length(run_opts.SASampleVals);
-            n_load_sample = length(run_opts.LoadSampleVals);
-            found_loads = false;
-            for j = 1:n_tests
+        function return_struct = doStuffWithData(obj, app, data, ~, ~, parentIndices, run_opts)
+            nTimes = obj.BFinder.getN();
+            nTests = length(obj.NestedTests);
+            nLoads = 0;
+            nSASample = length(run_opts.SASampleVals);
+            nLoadSample = length(run_opts.LoadSampleVals);
+            foundLoads = false;
+            for j = 1:nTests
                 test = obj.NestedTests(j);
                 if isa(test, 'LoadsTestSection')
-                    found_loads = true;
-                    n_loads = test.BFinder.getN();
+                    foundLoads = true;
+                    nLoads = test.BFinder.getN();
                     break;
                 end
             end
             
-            if ~found_loads
+            if ~foundLoads
                 error('Matt error: no loads found in intermediate test section');
             end
             
-            sa_data = cell(n_loads, n_times);
-            fz_data = cell(n_loads, n_times);
-            nfy_data = cell(n_loads, n_times);
-            mz_data = cell(n_loads, n_times);
+            saData = cell(nLoads, nTimes);
+            fzData = cell(nLoads, nTimes);
+            nfyData = cell(nLoads, nTimes);
+            mzData = cell(nLoads, nTimes);
             
-            nfy_C = zeros(6, n_loads, n_times);
-            mz_C = zeros(6, n_loads, n_times);
-            nfy_exitflags = zeros(n_loads, n_times);
-            mz_exitflags = zeros(n_loads, n_times);
-            nfy_sample_points = zeros(n_sa_sample, n_loads, n_times);
-            mz_sample_points = zeros(n_sa_sample, n_loads, n_times);
-            nfy_load_poly_coeff = 0;
-            mz_load_poly_coeff = 0;
-            nfy_vals = zeros(n_sa_sample, n_load_sample, n_times);
-            mz_vals = zeros(n_sa_sample, n_load_sample, n_times);
-            mean_loads = zeros(n_loads, n_times);
-            fz_options = 0;
-            ia_options = zeros(n_times, 1);
+            nfyC = zeros(6, nLoads, nTimes);
+            mzC = zeros(6, nLoads, nTimes);
+            nfyExitFlags = zeros(nLoads, nTimes);
+            mzExitFlags = zeros(nLoads, nTimes);
+            nfySamplePoints = zeros(nSASample, nLoads, nTimes);
+            mzSamplePoints = zeros(nSASample, nLoads, nTimes);
+            nfyLoadPolyCoeff = 0;
+            mzLoadPolyCoeff = 0;
+            nfyVals = zeros(nSASample, nLoadSample, nTimes);
+            mzVals = zeros(nSASample, nLoadSample, nTimes);
+            meanLoads = zeros(nLoads, nTimes);
+            fzOptions = 0;
+            iaOptions = zeros(nTimes, 1);
             
-            for i = 1:n_times
+            for i = 1:nTimes
                 %disp(['Camber #' num2str(i)])
-                for j = 1:n_tests
-                    new_indices = [parent_indices, i, j];
+                for j = 1:nTests
+                    newIndices = [parentIndices, i, j];
                     test = obj.NestedTests(j);
                     
-                    nested_lb = getNestedLB(obj, new_indices);
-                    nested_ub = getNestedUB(obj, new_indices);
+                    nestedLB = getNestedLB(obj, newIndices);
+                    nestedUB = getNestedUB(obj, newIndices);
                     
-                    ret_struct = test.doStuffWithData( ...
+                    retStruct = test.doStuffWithData( ...
                         app, ...
                         data, ...
-                        nested_lb, ...
-                        nested_ub, ...
-                        new_indices, ...
+                        nestedLB, ...
+                        nestedUB, ...
+                        newIndices, ...
                         run_opts);
                     if isa(obj.NestedTests(j), 'LoadsTestSection')
-                        sa_data = assign_1dcell_into_2dcell(sa_data, ret_struct.sa_data, i);
-                        fz_data = assign_1dcell_into_2dcell(fz_data, ret_struct.fz_data, i);
-                        nfy_data = assign_1dcell_into_2dcell(nfy_data, ret_struct.nfy_data, i);
-                        mz_data = assign_1dcell_into_2dcell(mz_data, ret_struct.mz_data, i);
-                        nfy_sample_points(:, :, i) = ret_struct.nfy_sample_points;
-                        mz_sample_points(:, :, i) = ret_struct.mz_sample_points;
-                        nfy_C(:, :, i) = ret_struct.nfy_C;
-                        mz_C(:, :, i) = ret_struct.mz_C;
-                        nfy_exitflags(:, i) = ret_struct.nfy_exitflags;
-                        mz_exitflags(:, i) = ret_struct.mz_exitflags;
+                        saData = assign1DInto2DCell(saData, retStruct.sa_data, i);
+                        fzData = assign1DInto2DCell(fzData, retStruct.fz_data, i);
+                        nfyData = assign1DInto2DCell(nfyData, retStruct.nfy_data, i);
+                        mzData = assign1DInto2DCell(mzData, retStruct.mz_data, i);
+                        nfySamplePoints(:, :, i) = retStruct.nfy_sample_points;
+                        mzSamplePoints(:, :, i) = retStruct.mz_sample_points;
+                        nfyC(:, :, i) = retStruct.nfy_C;
+                        mzC(:, :, i) = retStruct.mz_C;
+                        nfyExitFlags(:, i) = retStruct.nfy_exitflags;
+                        mzExitFlags(:, i) = retStruct.mz_exitflags;
                         
-                        ret_nfy_load_poly_coeff = ret_struct.nfy_load_poly_coeff;
-                        n_load_coeff = size(ret_nfy_load_poly_coeff, 1);
+                        retNfyLoadPolyCoeff = retStruct.nfyLoadPolyCoeff;
+                        nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
                         if i == 1
-                            nfy_load_poly_coeff = zeros(n_load_coeff, n_sa_sample, n_times);
-                            mz_load_poly_coeff = zeros(n_load_coeff, n_sa_sample, n_times);
+                            nfyLoadPolyCoeff = zeros(nLoadCoeff, nSASample, nTimes);
+                            mzLoadPolyCoeff = zeros(nLoadCoeff, nSASample, nTimes);
                         end
-                        nfy_load_poly_coeff(:, :, i) = ret_nfy_load_poly_coeff; %#ok<AGROW>
-                        mz_load_poly_coeff(:, :, i) = ret_struct.mz_load_poly_coeff; %#ok<AGROW>
+                        nfyLoadPolyCoeff(:, :, i) = retNfyLoadPolyCoeff; %#ok<AGROW>
+                        mzLoadPolyCoeff(:, :, i) = retStruct.mzLoadPolyCoeff; %#ok<AGROW>
                         
-                        nfy_vals(:, :, i) = ret_struct.nfy_vals;
-                        mz_vals(:, :, i) = ret_struct.mz_vals;
-                        mean_loads(:, i) = ret_struct.mean_loads;
-                        fz_options = ret_struct.fz_options;
+                        nfyVals(:, :, i) = retStruct.nfyVals;
+                        mzVals(:, :, i) = retStruct.mzVals;
+                        meanLoads(:, i) = retStruct.meanLoads;
+                        fzOptions = retStruct.fzOptions;
                         
-                        ia_options(i) = mean(data.IA(nested_lb:nested_ub));
+                        iaOptions(i) = mean(data.IA(nestedLB:nestedUB));
                     end
                 end
             end
             
-            ia_options = round(ia_options);
-            [ia_options, order] = sort(ia_options);
-            return_struct.ia_options = ia_options;
+            iaOptions = round(iaOptions);
+            [iaOptions, order] = sort(iaOptions);
+            return_struct.ia_options = iaOptions;
 
-            sa_data = reorder2DCellDim2(sa_data, order);
-            fz_data = reorder2DCellDim2(fz_data, order);
-            nfy_data = reorder2DCellDim2(nfy_data, order);
-            mz_data = reorder2DCellDim2(mz_data, order);
-            nfy_sample_points = nfy_sample_points(:, :, order);
-            mz_sample_points = mz_sample_points(:, :, order);
-            nfy_C = nfy_C(:, :, order);
-            mz_C = mz_C(:, :, order);
-            nfy_exitflags = nfy_exitflags(:, order);
-            mz_exitflags = mz_exitflags(:, order);
-            nfy_vals = nfy_vals(:, :, order);
-            mz_vals = mz_vals(:, :, order);
+            saData = reorder2DCellDim2(saData, order);
+            fzData = reorder2DCellDim2(fzData, order);
+            nfyData = reorder2DCellDim2(nfyData, order);
+            mzData = reorder2DCellDim2(mzData, order);
+            nfySamplePoints = nfySamplePoints(:, :, order);
+            mzSamplePoints = mzSamplePoints(:, :, order);
+            nfyC = nfyC(:, :, order);
+            mzC = mzC(:, :, order);
+            nfyExitFlags = nfyExitFlags(:, order);
+            mzExitFlags = mzExitFlags(:, order);
+            nfyVals = nfyVals(:, :, order);
+            mzVals = mzVals(:, :, order);
             
-            return_struct.sa_data = sa_data;
-            return_struct.fz_data = fz_data;
-            return_struct.nfy_data = nfy_data;
-            return_struct.mz_data = mz_data;
-            return_struct.nfy_C = nfy_C;
-            return_struct.mz_C = mz_C;
-            return_struct.nfy_exitflags = nfy_exitflags;
-            return_struct.mz_exitflags = mz_exitflags;
-            return_struct.nfy_sample_points = nfy_sample_points;
-            return_struct.mz_sample_points = mz_sample_points;
-            return_struct.nfy_load_poly_coeff = nfy_load_poly_coeff;
-            return_struct.mz_load_poly_coeff = mz_load_poly_coeff;
-            return_struct.nfy_vals = nfy_vals;
-            return_struct.mz_vals = mz_vals;
-            return_struct.mean_loads = mean_loads;
-            return_struct.fz_options = fz_options;
-            return_struct.ia_options = ia_options;
+            return_struct.sa_data = saData;
+            return_struct.fz_data = fzData;
+            return_struct.nfy_data = nfyData;
+            return_struct.mz_data = mzData;
+            return_struct.nfy_C = nfyC;
+            return_struct.mz_C = mzC;
+            return_struct.nfy_exitflags = nfyExitFlags;
+            return_struct.mz_exitflags = mzExitFlags;
+            return_struct.nfy_sample_points = nfySamplePoints;
+            return_struct.mz_sample_points = mzSamplePoints;
+            return_struct.nfy_load_poly_coeff = nfyLoadPolyCoeff;
+            return_struct.mz_load_poly_coeff = mzLoadPolyCoeff;
+            return_struct.nfy_vals = nfyVals;
+            return_struct.mz_vals = mzVals;
+            return_struct.mean_loads = meanLoads;
+            return_struct.fz_options = fzOptions;
+            return_struct.ia_options = iaOptions;
         end
     end
 end

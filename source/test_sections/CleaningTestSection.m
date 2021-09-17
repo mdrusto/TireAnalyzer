@@ -5,7 +5,7 @@ classdef CleaningTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(obj, data, start_index, ~)
+        function ub = getUpperBound(~, ~, ~, ~)
             ub = 0;
         end
     end

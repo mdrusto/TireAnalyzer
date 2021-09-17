@@ -1,5 +1,5 @@
 % Fit a pacejka curve to the data
-function [C, exitflag] = fit_pacejka(xdata, ydata, algorithm, max_iterations, C0)
+function [C, exitflag] = fitPacejka(xdata, ydata, algorithm, maxIterations, C0)
 
     % Fit options
     % Lower bound, upper bound, initial value
@@ -9,7 +9,7 @@ function [C, exitflag] = fit_pacejka(xdata, ydata, algorithm, max_iterations, C0
     % Create options variable
     options = optimoptions('lsqcurvefit', ...
         'Display', 'off', ...
-        'MaxFunctionEvaluations', max_iterations, ...
+        'MaxFunctionEvaluations', maxIterations, ...
         'Algorithm', algorithm);
 
     % Run the fit function

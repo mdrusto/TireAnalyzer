@@ -11,37 +11,37 @@ classdef TestSectionRepeated < TestSectionNested
             obj.nTimes = nTimes;
         end
         
-        function ub = getUpperBound(obj, data, start_index, parent_indices)
-            n_tests = length(obj.NestedTests);
+        function ub = getUpperBound(obj, data, startIndex, parentIndices)
+            nTests = length(obj.NestedTests);
             
             for i = 1:obj.nTimes % Iterate over the number of repeated test groups
-                for j = 1:n_tests % Iterate inside each repeated group, for each individual test
-                    new_indices = [parent_indices, i, j];
+                for j = 1:nTests % Iterate inside each repeated group, for each individual test
+                    newIndices = [parentIndices, i, j];
                     
                     % Get the upper bound for this test
                     %disp(['Iteration #' num2str(i) ', Test #' num2str(j)]);
-                    ub_ij = obj.NestedTests(j).getUpperBound(data, start_index);
+                    ub_ij = obj.NestedTests(j).getUpperBound(data, startIndex);
                     
                     % Record the bounds for later
-                    setNestedLB(obj, new_indices, start_index + 1);
-                    setNestedUB(obj, new_indices, ub_ij);
+                    setNestedLB(obj, newIndices, startIndex + 1);
+                    setNestedUB(obj, newIndices, ub_ij);
                     
-                    start_index = ub_ij + 1; % Start index for next nested test
+                    startIndex = ub_ij + 1; % Start index for next nested test
                     disp(['Test: ' obj.Name ' #' num2str(i) ', UB: ' num2str(ub_ij)]);
                 end
             end
             ub = ub_ij; % Return the last upper bound
         end
         
-        function doStuffWithData(obj, app, data, ~, ~, parent_indices, runOptions)
+        function doStuffWithData(obj, app, data, ~, ~, parentIndices, runOptions)
             [n_times, n_tests] = size(obj.NestedLowerBounds);
             for i = 1:n_times
                 for j = 1:n_tests
                     obj.NestedTests(j).doStuffWithData( ...
                         app, ...
                         data, ...
-                        obj.NestedLowerBounds(parent_indices, i, j), ...
-                        obj.NestedUpperBounds(parent_indices, i, j), ...
+                        obj.NestedLowerBounds(parentIndices, i, j), ...
+                        obj.NestedUpperBounds(parentIndices, i, j), ...
                         runOptions);
                 end
             end

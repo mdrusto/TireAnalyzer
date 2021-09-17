@@ -1,4 +1,4 @@
-function [lb, ub] = group_data_diff(data, n, range, start)
+function [lb, ub] = groupDataDiff(data, n, range, start)
 
     lb = zeros(n, 1);
     ub = zeros(n, 1);

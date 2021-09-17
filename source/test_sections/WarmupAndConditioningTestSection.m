@@ -5,8 +5,8 @@ classdef WarmupAndConditioningTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index, ~)
-            [~, ub] = group_data_diff(data.FZ, 1, 250, start_index);
+        function ub = getUpperBound(~, data, startIndex, ~)
+            [~, ub] = groupDataDiff(data.FZ, 1, 250, startIndex);
         end
     end
 end

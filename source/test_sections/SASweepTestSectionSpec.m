@@ -12,25 +12,25 @@ classdef SASweepTestSectionSpec < SASweepTestSection
             obj.Threshold = threshold;
         end
         
-        function ub = getUpperBound(obj, data, start_index, ~)
-            n_crossings = 0;
-            within_threshold = false;
-            for i = (start_index + 1):length(data.SA) % Loop over remaining data
+        function ub = getUpperBound(obj, data, startIndex, ~)
+            nCrossings = 0;
+            withinThreshold = false;
+            for i = (startIndex + 1):length(data.SA) % Loop over remaining data
                 if abs(data.SA(i) - obj.FinalVal) < obj.Threshold
-                    if ~within_threshold
+                    if ~withinThreshold
                         % Update the counter and flag
-                        n_crossings = n_crossings + 1;
-                        if n_crossings == 3
+                        nCrossings = nCrossings + 1;
+                        if nCrossings == 3
                             ub = i;
                             return;
                         end
                         % Update the flag if this isn't the final crossing
-                        within_threshold = true;
+                        withinThreshold = true;
                     end % Do nothing if already inside threshold
                 else
-                    if within_threshold
+                    if withinThreshold
                         % Reset the flag
-                        within_threshold = false;
+                        withinThreshold = false;
                     end
                 end
             end % End for-loop

@@ -11,8 +11,8 @@ classdef BoundsFinderSpec < BoundsFinder
             obj.Threshold = threshold;
         end
         
-        function [lb, ub] = getBounds(obj, data, start_index)
-            [lb, ub] = group_data_avg(data, obj.ExpectedVals, obj.Threshold, start_index);
+        function [lb, ub] = getBounds(obj, data, startIndex)
+            [lb, ub] = groupDataAvg(data, obj.ExpectedVals, obj.Threshold, startIndex);
         end
         
         function n = getN(obj)

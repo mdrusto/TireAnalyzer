@@ -12,60 +12,59 @@ classdef TestSectionNested < TestSection
             obj.NestedTests = nestedTests;
         end
         
-        function ub = getUpperBound(obj, app, data, start_index, parent_indices)
-            n_tests = length(obj.NestedTests);
+        function ub = getUpperBound(obj, app, data, startIndex, parentIndices)
+            nTests = length(obj.NestedTests);
             
-            for i = 1:n_tests
-                new_indices = [parent_indices i];
+            for i = 1:nTests
+                newIndices = [parentIndices i];
                 
                 % Get the upper bound for this test
-                ub_i = obj.NestedTests(i).getUpperBound(obj, app, data, start_index, new_indices);
+                ub_i = obj.NestedTests(i).getUpperBound(obj, app, data, startIndex, newIndices);
 
                 % Record the bounds for later
-                setNestedLB(obj, new_indices, start_index + 1);
-                setNestedUB(obj, new_indices, ub_ij);
+                setNestedLB(obj, newIndices, startIndex + 1);
+                setNestedUB(obj, newIndices, ub_ij);
 
-                start_index = ub_i + 1; % Start index for next nested test
+                startIndex = ub_i + 1; % Start index for next nested test
             end
             ub = ub_i; % Return the last upper bound
         end
         
-        function doStuffWithData(obj, app, data, ~, ~, parent_indices, runOptions)
-            n_tests = length(obj.NestedTests);
-            for i = 1:n_tests
-                new_indices = [parent_indices, i];
+        function doStuffWithData(obj, app, data, ~, ~, parentIndices, runOptions)
+            nTests = length(obj.NestedTests);
+            for i = 1:nTests
+                newIndices = [parentIndices, i];
                 obj.NestedTests(i).doStuffWithData( ...
                     app, ...
                     data, ...
-                    getNestedLB(obj, new_indices), ...
-                    getNestedUB(obj, new_indices), ...
-                    new_indices, ...
+                    getNestedLB(obj, newIndices), ...
+                    getNestedUB(obj, newIndices), ...
+                    newIndices, ...
                     runOptions);
             end
         end
         
         function lb = getNestedLB(obj, indices)
-            bound_size = size(obj.NestedLowerBounds);
-            if length(indices) > length(bound_size) || ...
-                    (length(indices) == length(bound_size) && any(indices > bound_size))
-                error(['Matt error: indices outside of bounds. Indices: ' num2str(indices) ', size of bounds: ' num2str(bound_size)]);
+            boundSize = size(obj.NestedLowerBounds);
+            if length(indices) > length(boundSize) || ...
+                    (length(indices) == length(boundSize) && any(indices > boundSize))
+                error(['Matt error: indices outside of bounds. Indices: ' num2str(indices) ', size of bounds: ' num2str(boundSize)]);
             end
-            %indices
-            indices_cell = num2cell(indices);
-            lb = obj.NestedLowerBounds(indices_cell{:});
+            indicesCell = num2cell(indices);
+            lb = obj.NestedLowerBounds(indicesCell{:});
             if isempty(lb)
                 error(['Matt error: Empty LB at [' num2str(indices) ']'])
             end
             if ~isscalar(lb)
-                error(['Matt error: need more specific indices. Given: [' num2str(indices_cell{:}) '], need ' num2str(ndims(obj.NestedLowerBounds)) '. Result: ' num2str(lb)])
+                error(['Matt error: need more specific indices. Given: [' num2str(indicesCell{:}) '], need ' num2str(ndims(obj.NestedLowerBounds)) '. Result: ' num2str(lb)])
             end
         end
         
         function ub = getNestedUB(obj, indices)
-            bound_size = size(obj.NestedUpperBounds);
-            if length(indices) > length(bound_size) || ...
-                    (length(indices) == length(bound_size) && any(indices > bound_size))
-                error(['Matt error: indices outside of bounds. Indices: ' num2str(indices{:}) ', size of bounds: ' num2str(bound_size)]);
+            boundSize = size(obj.NestedUpperBounds);
+            if length(indices) > length(boundSize) || ...
+                    (length(indices) == length(boundSize) && any(indices > boundSize))
+                error(['Matt error: indices outside of bounds. Indices: ' num2str(indices{:}) ', size of bounds: ' num2str(boundSize)]);
             end
             indices = num2cell(indices);
             ub = obj.NestedUpperBounds(indices{:});
@@ -89,10 +88,6 @@ classdef TestSectionNested < TestSection
             if ~isscalar(value)
                 error(['Matt error: non-scalar argument: ' string(value)])
             end
-            %if isempty(obj.NestedUpperBounds) 
-            %    disp('EMPTY')
-            %    obj.NestedLowerBounds = cell(1);
-            %end
             indices = num2cell(indices);
             obj.NestedUpperBounds(indices{:}) = value;
         end

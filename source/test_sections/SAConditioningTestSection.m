@@ -5,8 +5,8 @@ classdef SAConditioningTestSection < TestSection
             obj@TestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index, ~)
-            ub = group_data_diff(data.FZ, 1, 200, start_index);
+        function ub = getUpperBound(~, data, startIndex, ~)
+            ub = groupDataDiff(data.FZ, 1, 200, startIndex);
         end
     end
 end

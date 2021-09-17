@@ -5,9 +5,9 @@ classdef DynamicSpringRateTestSection < SpringRateTestSection
             obj@SpringRateTestSection(name);
         end
         
-        function ub = getUpperBound(~, data, start_index, ~)
-            [~, ub_array] = group_data_diff(data.FZ, 4, 200, start_index);
-            ub = ub_array(4);
+        function ub = getUpperBound(~, data, startIndex, ~)
+            [~, ubArray] = groupDataDiff(data.FZ, 4, 200, startIndex);
+            ub = ubArray(4);
         end
     end
 end

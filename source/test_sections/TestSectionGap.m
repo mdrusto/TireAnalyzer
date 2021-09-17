@@ -14,10 +14,10 @@ classdef TestSectionGap < TestSection
             obj.Threshold = threshold;
         end
         
-        function ub = getUpperBound(obj, data, start_index, ~)
-            data_sel = data.(obj.VarName);
-            for i = (start_index + 1):length(data_sel)
-                if abs(data_sel(i) - obj.Value) < obj.Threshold
+        function ub = getUpperBound(obj, data, startIndex, ~)
+            dataSel = data.(obj.VarName);
+            for i = (startIndex + 1):length(dataSel)
+                if abs(dataSel(i) - obj.Value) < obj.Threshold
                     ub = i - 1;
                     %disp(['Test: ' obj.Name ', UB: ' num2str(ub)]);
                     return
