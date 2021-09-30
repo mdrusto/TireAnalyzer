@@ -94,7 +94,7 @@ classdef CamberVaryingTestSection < TestSectionRepeatedWSpec
             iaOptions = round(iaOptions);
             [iaOptions, order] = sort(iaOptions);
             
-            app.LatCamberLUTData.ia_options = iaOptions;
+            app.LatCamberLUTData.iaOptions = iaOptions;
             
             app.LatCamberLUTData.saData = reorder2DCellDim2(app.LatCamberLUTData.saData, order);
             app.LatCamberLUTData.fzData = reorder2DCellDim2(app.LatCamberLUTData.fzData, order);
