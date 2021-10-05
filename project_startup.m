@@ -1,0 +1,1 @@
+appdesigner('source/TireAnalyzer.mlapp')

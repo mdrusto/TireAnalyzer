@@ -1,8 +1,20 @@
 classdef (Abstract) BoundsFinder < matlab.mixin.Heterogeneous
     
-    methods (Abstract)
-        [lb, ub] = getBounds(obj, data, startIndex)
+    methods
+        function [lb, ub] = getBounds(obj, data, startIndex)
+            lb = 0;
+            ub = 0;
+        end
         
-        n = getN(obj)
+        function n = getN(obj)
+            n = 0;
+        end
+    end
+    
+    methods (Abstract)
+        % Get bounds of each group in this test section
+        
+        
+        
     end
 end
