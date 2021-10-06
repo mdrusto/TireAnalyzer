@@ -5,7 +5,7 @@ classdef SpecifiedEndTestSection < TestSection
             if nargin < 2
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, BoundsFinderN(1, 0), '', TestSection.empty, exceptions);
+            obj@TestSection(name, BoundsFinderN(1, 0), '', TestSection.empty, exceptions, false);
         end
         
         function [lb, ub] = getBounds(~, data, startIndex)

@@ -6,10 +6,11 @@ classdef TestSection < handle & matlab.mixin.Heterogeneous % Inheriting from thi
         VarName char
         Children TestSection
         FormatExceptions TestSectionException
+        Displayed logical
     end
     
     methods
-        function obj = TestSection(name, bFinder, varName, children, exceptions)
+        function obj = TestSection(name, bFinder, varName, children, exceptions, displayed)
             obj.Name = name;
             obj.BFinder = bFinder;
             obj.VarName = varName;
@@ -22,6 +23,11 @@ classdef TestSection < handle & matlab.mixin.Heterogeneous % Inheriting from thi
                 obj.FormatExceptions = exceptions;
             else
                 obj.FormatExceptions = TestSectionException.empty;
+            end
+            if nargin >= 6
+                obj.Displayed = displayed;
+            else
+                obj.Displayed = true;
             end
         end
         

@@ -11,7 +11,7 @@ classdef TestSectionGap < TestSection
             if nargin < 5
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, BoundsFinderN(1, 0), varName, TestSection.empty, exceptions);
+            obj@TestSection(name, BoundsFinderN(1, 0), varName, TestSection.empty, exceptions, false);
             obj.Value = value;
             obj.Threshold = threshold;
         end
