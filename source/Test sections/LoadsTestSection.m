@@ -85,6 +85,13 @@ classdef LoadsTestSection < TestSection
             
             meanLoads = -meanLoads;
             [meanLoads, order] = sort(meanLoads);
+            minDiff = min(diff(sort(meanLoads)));
+            if minDiff < 50
+                disp('----- Error info: ------')
+                disp('Mean loads:')
+                disp(meanLoads)
+                error('Matt error: not enough error between mean loads. See above info')
+            end
             fzOptions = round(meanLoads);
             saData = saData(order);
             fzData = fzData(order);
