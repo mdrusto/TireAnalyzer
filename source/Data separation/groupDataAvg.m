@@ -1,5 +1,5 @@
 % Algorithm for finding the bounds of each group of data
-function [lb, ub] = groupDataAvg(data, avg, range, start)
+function [lb, ub] = groupDataAvg(data, avg, existingValueThreshold, newValueThreshold, start)
     n = length(avg);
     nData = length(data);
     lb = zeros(n, 1);
@@ -16,14 +16,15 @@ function [lb, ub] = groupDataAvg(data, avg, range, start)
         while true
             dataRange(x) = avg(i);
             % If data is in the right range, set the lower bound
-            if ~startedRange && abs(data(x) - avg(i)) < range
+            if ~startedRange && abs(data(x) - avg(i)) < newValueThreshold
                 startedRange = true;
                 lb(i) = x;
-            elseif x == nData || (startedRange && (x > lb(i) + 10) && abs(data(x) - avg(i)) > range)
+            elseif x == nData || (startedRange && (x > lb(i) + 10) && abs(data(x) - avg(i)) > existingValueThreshold)
                 % Set the upper bound if no longer in the right range
                 ub(i) = x;
                 startedRange = false;
-                break;
+                x = x + 1;
+                break; % Break the while-loop and move to the next group
             end
             
             x = x + 1; % Increment x
