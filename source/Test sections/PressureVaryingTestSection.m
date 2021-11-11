@@ -59,7 +59,6 @@ classdef PressureVaryingTestSection < TestSection
                     childResults = childrenResults{j}(i);
                     
                     if isa(test, 'LoadsTestSection')
-                        nTimes
                         app.LatPressureLUTData.saData(:, i) = childResults.saData;
                         app.LatPressureLUTData.fzData(:, i) = childResults.fzData;
                         app.LatPressureLUTData.nfyData(:, i) = childResults.nfyData;

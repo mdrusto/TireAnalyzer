@@ -9,7 +9,7 @@ classdef TestSectionGap < TestSection
             if nargin < 3
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, BoundsFinderN(1, 0), '', TestSection.empty, exceptions);
+            obj@TestSection(name, BoundsFinderN(1, 0), '', TestSection.empty, exceptions, false);
             obj.NDataPoints = nDataPoints;
         end
         
