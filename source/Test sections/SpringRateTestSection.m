@@ -8,7 +8,7 @@ classdef SpringRateTestSection < TestSection
             if nargin < 3
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, bFinder, 'FZ', TestSection.empty, exceptions);
+            obj@TestSection(name, bFinder, "FZ", TestSection.empty, exceptions);
         end
         
 %         function ub = getUpperBound(~, data, startIndex, ~)

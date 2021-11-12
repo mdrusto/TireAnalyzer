@@ -11,7 +11,7 @@ classdef PressureVaryingTestSectionWCamber < TestSection
             if nargin < 4
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, bFinder, 'P', children, exceptions);
+            obj@TestSection(name, bFinder, "P", children, exceptions);
         end
         
         function processingResults = processData(obj, app, ~, childrenResults, runOpts)

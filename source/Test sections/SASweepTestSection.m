@@ -5,7 +5,7 @@ classdef SASweepTestSection < TestSection
             if nargin < 2
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, BoundsFinderN(1, 1), 'SA', TestSection.empty, exceptions);
+            obj@TestSection(name, BoundsFinderN(1, 1), "SA", TestSection.empty, exceptions);
         end
         
         function processingResults = processData(~, ~, data, ~, runOpts)

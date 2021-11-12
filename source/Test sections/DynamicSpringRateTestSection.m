@@ -2,7 +2,7 @@ classdef DynamicSpringRateTestSection < SpringRateTestSection
     
     methods
         function obj = DynamicSpringRateTestSection(name, bFinder, children, exceptions)
-            obj@SpringRateTestSection(name, bFinder, 'FZ', children, exceptions);
+            obj@SpringRateTestSection(name, bFinder, "FZ", children, exceptions);
         end
         
         function [lb, ub] = getBounds(~, data, startIndex, ~)

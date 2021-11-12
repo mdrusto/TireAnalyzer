@@ -5,7 +5,7 @@ classdef CleaningTestSection < TestSection
             if nargin < 2
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, BoundsFinderN(1, 0), '', TestSection.empty, exceptions);
+            obj@TestSection(name, BoundsFinderN(1, 0), "", TestSection.empty, exceptions);
         end
         
         function [lb, ub] = getBounds(~, data, startIndex)

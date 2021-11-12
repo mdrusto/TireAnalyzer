@@ -2,7 +2,7 @@ classdef CamberAndPressureVaryingTestSection < TestSection
     
     methods
         function obj = CamberAndPressureVaryingTestSection(name, bFinder, children, exceptions)
-            obj@TestSection(name, bFinder, 'P', children, exceptions);
+            obj@TestSection(name, bFinder, "P", children, exceptions);
         end
         
         function processingResults = processData(obj, app, ~, childrenResults, ~)

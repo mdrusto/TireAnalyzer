@@ -11,7 +11,7 @@ classdef LoadsTestSection < TestSection
             if nargin < 4
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, bFinder, 'FZ', children, exceptions);
+            obj@TestSection(name, bFinder, "FZ", children, exceptions);
         end
         
         function processingResults = processData(obj, ~, ~, childrenResults, runOpts)

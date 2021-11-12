@@ -1,9 +1,9 @@
 classdef TestSection < handle & matlab.mixin.Heterogeneous % Inheriting from this lets me use property validation
     
     properties
-        Name char
+        Name string
         BFinder BoundsFinder
-        VarName char
+        VarName string
         Children TestSection
         FormatExceptions TestSectionException
         Displayed logical

@@ -11,7 +11,7 @@ classdef CamberVaryingTestSection < TestSection
             if nargin < 4
                 exceptions = TestSectionException.empty;
             end
-            obj@TestSection(name, bFinder, 'IA', children, exceptions);
+            obj@TestSection(name, bFinder, "IA", children, exceptions);
         end
         
         function processingResults = processData(obj, app, ~, childrenResults, runOpts)
