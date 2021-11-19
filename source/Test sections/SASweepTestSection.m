@@ -44,6 +44,10 @@ classdef SASweepTestSection < TestSection
             processingResults.saSampleVals = saSampleVals;
             processingResults.nfySamplePoints = nfySamplePoints;
             processingResults.mzSamplePoints = mzSamplePoints;
+
+            % Similarity method
+            
+            
         end
     end
 end
