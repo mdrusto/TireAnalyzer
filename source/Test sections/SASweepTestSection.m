@@ -32,6 +32,7 @@ classdef SASweepTestSection < TestSection
             
             % Include all the relevant info in the return array
             processingResults.saData = saDataScaled;
+            processingResults.fyData = fyDataScaled;
             processingResults.nfyData = nfyDataScaled;
             processingResults.mzData = mzDataScaled;
             processingResults.fzData = data.FZ;
@@ -46,7 +47,6 @@ classdef SASweepTestSection < TestSection
             processingResults.mzSamplePoints = mzSamplePoints;
 
             % Similarity method
-            
             
         end
     end
