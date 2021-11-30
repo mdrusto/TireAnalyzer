@@ -74,13 +74,11 @@ classdef LoadsTestSection < TestSection
                         nfyExitFlags(i) = childResults.nfyExitFlag;
                         mzExitFlags(i) = childResults.mzExitFlag;
                         
-
                         meanLoads(i) = mean(childResults.fzData);
                         assert(isscalar(mean(childResults.fzData)), 'size of mean is not singular')
 
                         % Similarity Method
                         fz_bar = mean(childResults.fzData);
-                        
                         
                         if i == 1
                             refFZ = fz_bar;
