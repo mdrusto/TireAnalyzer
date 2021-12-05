@@ -85,6 +85,7 @@ classdef LoadsTestSection < TestSection
                             refFY = childResults.fyData;
                         end
                         
+                        
                         alpha_eq = (refFZ ./ fz_bar) .* childResults.saData;
                         FY_adj = (fz_bar ./ refFZ) .* refFY;
                     end
