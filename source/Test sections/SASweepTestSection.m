@@ -31,8 +31,8 @@ classdef SASweepTestSection < TestSection
             mzSamplePoints = pacejka(mzC, saSampleValsRad);
             
             % Include all the relevant info in the return array
+            processingResults.nData = length(saDataScaled);
             processingResults.saData = saDataScaled;
-            processingResults.fyData = fyDataScaled;
             processingResults.nfyData = nfyDataScaled;
             processingResults.mzData = mzDataScaled;
             processingResults.fzData = data.FZ;

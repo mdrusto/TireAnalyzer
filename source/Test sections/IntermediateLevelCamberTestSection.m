@@ -54,6 +54,9 @@ classdef IntermediateLevelCamberTestSection < TestSection
             fzOptions = 0;
             iaOptions = zeros(nTimes, 1);
             
+            alpha_adj = cell(nTimes, 1);
+            FY_adj = cell(nTimes, 1);
+            
             for i = 1:nTimes
                 for j = 1:nTests
                     test = obj.Children(j);
@@ -72,6 +75,16 @@ classdef IntermediateLevelCamberTestSection < TestSection
                         nfyExitFlags(:, i) = childResults.nfyExitFlags;
                         mzExitFlags(:, i) = childResults.mzExitFlags;
                         
+                        nfyVals(:, :, i) = childResults.nfyVals;
+                        mzVals(:, :, i) = childResults.mzVals;
+                        meanLoads(:, i) = childResults.meanLoads;
+                        fzOptions = childResults.fzOptions;
+                        
+                        iaOptions(i) = mean(vertcat(childResults.iaData{:}));
+                        
+                        alpha_adj{i} = childResults.alpha_adj;
+                        FY_adj{i} = childResults.FY_adj;
+                        
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
                         if i == 1
@@ -80,13 +93,6 @@ classdef IntermediateLevelCamberTestSection < TestSection
                         end
                         nfyLoadPolyCoeff(:, :, i) = retNfyLoadPolyCoeff; %#ok<AGROW>
                         mzLoadPolyCoeff(:, :, i) = childResults.mzLoadPolyCoeff; %#ok<AGROW>
-                        
-                        nfyVals(:, :, i) = childResults.nfyVals;
-                        mzVals(:, :, i) = childResults.mzVals;
-                        meanLoads(:, i) = childResults.meanLoads;
-                        fzOptions = childResults.fzOptions;
-                        
-                        iaOptions(i) = mean(vertcat(childResults.iaData{:}));
                     end
                 end
             end
@@ -108,6 +114,8 @@ classdef IntermediateLevelCamberTestSection < TestSection
             mzExitFlags = mzExitFlags(:, order);
             nfyVals = nfyVals(:, :, order);
             mzVals = mzVals(:, :, order);
+            alpha_adj = alpha_adj(order);
+            FY_adj = FY_adj(order);
             
             processingResults.saData = saData;
             processingResults.fzData = fzData;
@@ -127,6 +135,8 @@ classdef IntermediateLevelCamberTestSection < TestSection
             processingResults.meanLoads = meanLoads;
             processingResults.fzOptions = fzOptions;
             processingResults.iaOptions = iaOptions;
+            processingResults.alpha_adj = alpha_adj;
+            processingResults.FY_adj = FY_adj;
         end
     end
 end

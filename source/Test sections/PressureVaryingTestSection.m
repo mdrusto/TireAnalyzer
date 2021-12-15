@@ -52,6 +52,9 @@ classdef PressureVaryingTestSection < TestSection
             app.LatPressureLUTData.meanLoads = zeros(nLoads, nTimes);
             app.LatPressureLUTData.fzOptions = 0;
             app.LatPressureLUTData.iaOptions = 0;
+            % These two are variable size for each pressure section, so use cell arrays
+            app.LatPressureLUTData.alpha_adj = cell(nTimes, 1);
+            app.LatPressureLUTData.FY_adj = cell(nTimes, 1);
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -59,6 +62,8 @@ classdef PressureVaryingTestSection < TestSection
                     childResults = childrenResults{j}(i);
                     
                     if isa(test, 'LoadsTestSection')
+                        
+                        % Insert each row into global array
                         app.LatPressureLUTData.saData(:, i) = childResults.saData;
                         app.LatPressureLUTData.fzData(:, i) = childResults.fzData;
                         app.LatPressureLUTData.nfyData(:, i) = childResults.nfyData;
@@ -69,6 +74,14 @@ classdef PressureVaryingTestSection < TestSection
                         app.LatPressureLUTData.mzC(:, :, i) = childResults.mzC;
                         app.LatPressureLUTData.nfyExitFlags(:, i) = childResults.nfyExitFlags;
                         app.LatPressureLUTData.mzExitFlags(:, i) = childResults.mzExitFlags;
+                        app.LatPressureLUTData.nfyVals(:, :, i) = childResults.nfyVals;
+                        app.LatPressureLUTData.mzVals(:, :, i) = childResults.mzVals;
+                        app.LatPressureLUTData.meanLoads(:, i) = childResults.meanLoads;
+                        app.LatPressureLUTData.fzOptions = childResults.fzOptions;
+                        app.LatPressureLUTData.alpha_adj{i} = childResults.alpha_adj;
+                        app.LatPressureLUTData.FY_adj{i} = childResults.FY_adj;
+                        
+                        pOptions(i) = mean(vertcat(childResults.pData{:}));
                         
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
@@ -79,12 +92,6 @@ classdef PressureVaryingTestSection < TestSection
                         app.LatPressureLUTData.nfyLoadPolyCoeff(:, :, i) = retNfyLoadPolyCoeff;
                         app.LatPressureLUTData.mzLoadPolyCoeff(:, :, i) = childResults.mzLoadPolyCoeff;
                         
-                        app.LatPressureLUTData.nfyVals(:, :, i) = childResults.nfyVals;
-                        app.LatPressureLUTData.mzVals(:, :, i) = childResults.mzVals;
-                        app.LatPressureLUTData.meanLoads(:, i) = childResults.meanLoads;
-                        app.LatPressureLUTData.fzOptions = childResults.fzOptions;
-                        
-                        pOptions(i) = mean(vertcat(childResults.pData{:}));
                     end
                 end
             end
@@ -96,6 +103,7 @@ classdef PressureVaryingTestSection < TestSection
             
             app.LatPressureLUTData.pOptions = pOptions;
             
+            % Reorder arrays
             app.LatPressureLUTData.saData = reorder2DCellDim2(app.LatPressureLUTData.saData, order);
             app.LatPressureLUTData.fzData = reorder2DCellDim2(app.LatPressureLUTData.fzData, order);
             app.LatPressureLUTData.nfyData = reorder2DCellDim2(app.LatPressureLUTData.nfyData, order);
@@ -108,7 +116,10 @@ classdef PressureVaryingTestSection < TestSection
             app.LatPressureLUTData.mzSamplePoints = app.LatPressureLUTData.mzSamplePoints(:, :, order);
             app.LatPressureLUTData.nfyVals = app.LatPressureLUTData.nfyVals(:, :, order);
             app.LatPressureLUTData.mzVals = app.LatPressureLUTData.mzVals(:, :, order);
+            app.LatPressureLUTData.alpha_adj = app.LatPressureLUTData.alpha_adj(order);
+            app.LatPressureLUTData.FY_adj = app.LatPressureLUTData.FY_adj(order);
             
+            % Create empty return struct since it won't be used (top level in app class discards it)
             processingResults = struct();
         end
     end

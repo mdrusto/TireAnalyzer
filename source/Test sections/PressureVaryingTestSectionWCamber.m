@@ -59,7 +59,9 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                 'meanLoads', zeros(nLoads, nCamber, nTimes), ...
                 'fzOptions', zeros(nLoads, 1), ...
                 'iaOptions', zeros(nCamber, 1), ...
-                'pOptions', zeros(nTimes, 1));
+                'pOptions', zeros(nTimes, 1), ...
+                'alpha_adj', cell(nCamber, nTimes), ...
+                'FY_adj', cell(nCamber, nTimes));
             
             for i = 1:nTimes
                 %disp(['Pressure #' num2str(i)])
@@ -78,6 +80,15 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                         app.LatLUTData.mzC(:, :, :, i) = childResults.mzC;
                         app.LatLUTData.nfyExitFlags(:, :, i) = childResults.nfyExitFlags;
                         app.LatLUTData.mzExitFlags(:, :, i) = childResults.mzExitFlags;
+                        app.LatLUTData.nfyVals(:, :, :, i) = childResults.nfyVals;
+                        app.LatLUTData.mzVals(:, :, :, i) = childResults.mzVals;
+                        app.LatLUTData.meanLoads(:, :, i) = childResults.meanLoads;
+                        app.LatLUTData.fzOptions = childResults.fzOptions;
+                        app.LatLUTData.iaOptions = childResults.iaOptions;
+                        app.LatLUTData.alpha_adj(:, i) = childResults.alpha_adj;
+                        app.LatLUTData.FY_adj(:, i) = childResults.FY_adj;
+                        
+                        pOptions(i) = mean(vertcat(childResults.pData{:}));
                         
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
@@ -87,14 +98,6 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                         end
                         app.LatLUTData.nfyLoadPolyCoeff(:, :, :, i) = retNfyLoadPolyCoeff;
                         app.LatLUTData.mzLoadPolyCoeff(:, :, :, i) = childResults.mzLoadPolyCoeff;
-                        
-                        app.LatLUTData.nfyVals(:, :, :, i) = childResults.nfyVals;
-                        app.LatLUTData.mzVals(:, :, :, i) = childResults.mzVals;
-                        app.LatLUTData.meanLoads(:, :, i) = childResults.meanLoads;
-                        app.LatLUTData.fzOptions = childResults.fzOptions;
-                        app.LatLUTData.iaOptions = childResults.iaOptions;
-                        
-                        pOptions(i) = mean(vertcat(childResults.pData{:}));
                         
                     end
                 end
@@ -119,6 +122,8 @@ classdef PressureVaryingTestSectionWCamber < TestSection
             app.LatLUTData.mzC = app.LatLUTData.mzC(:, :, :, order);
             app.LatLUTData.nfyExitFlags = app.LatLUTData.nfyExitFlags(:, :, order);
             app.LatLUTData.mzExitFlags = app.LatLUTData.mzExitFlags(:, :, order);
+            app.LatLUTData.alpha_adj = app.LatLUTData.alpha_adj(order);
+            app.LatLUTData.FY_adj = app.LatLUTData.FY_adj(order);
             
             processingResults = struct();
         end

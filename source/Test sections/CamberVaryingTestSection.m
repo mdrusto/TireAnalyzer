@@ -52,6 +52,8 @@ classdef CamberVaryingTestSection < TestSection
             app.LatCamberLUTData.meanLoads = zeros(nLoads, nTimes);
             app.LatCamberLUTData.fzOptions = 0;
             app.LatCamberLUTData.iaOptions = 0;
+            app.LatCamberLUTData.alpha_adj = cell(nTimes, 1);
+            app.LatCamberLUTData.FY_adj = cell(nTimes, 1);
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -59,6 +61,8 @@ classdef CamberVaryingTestSection < TestSection
                     childResults = childrenResults{j}(i);
                     
                     if isa(test, 'LoadsTestSection')
+                        
+                        % Insert each row into global array
                         app.LatCamberLUTData.saData(:, i) = childResults.saData;
                         app.LatCamberLUTData.fzData(:, i) = childResults.fzData;
                         app.LatCamberLUTData.nfyData(:, i) = childResults.nfyData;
@@ -69,6 +73,14 @@ classdef CamberVaryingTestSection < TestSection
                         app.LatCamberLUTData.mzC(:, :, i) = childResults.mzC;
                         app.LatCamberLUTData.nfyExitFlags(:, i) = childResults.nfyExitFlags;
                         app.LatCamberLUTData.mzExitFlags(:, i) = childResults.mzExitFlags;
+                        app.LatCamberLUTData.nfyVals(:, :, i) = childResults.nfyVals;
+                        app.LatCamberLUTData.mzVals(:, :, i) = childResults.mzVals;
+                        app.LatCamberLUTData.meanLoads(:, i) = childResults.meanLoads;
+                        app.LatCamberLUTData.fzOptions = childResults.fzOptions;
+                        app.LatCamberLUTData.alpha_adj{i} = childResults.alpha_adj;
+                        app.LatCamberLUTData.FY_adj{i} = childResults.FY_adj;
+                        
+                        iaOptions(i) = mean(vertcat(childResults.iaData{:}));
                         
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
@@ -78,13 +90,6 @@ classdef CamberVaryingTestSection < TestSection
                         end
                         app.LatCamberLUTData.nfyLoadPolyCoeff(:, :, i) = retNfyLoadPolyCoeff;
                         app.LatCamberLUTData.mzLoadPolyCoeff(:, :, i) = childResults.mzLoadPolyCoeff;
-                        
-                        app.LatCamberLUTData.nfyVals(:, :, i) = childResults.nfyVals;
-                        app.LatCamberLUTData.mzVals(:, :, i) = childResults.mzVals;
-                        app.LatCamberLUTData.meanLoads(:, i) = childResults.meanLoads;
-                        app.LatCamberLUTData.fzOptions = childResults.fzOptions;
-                        
-                        iaOptions(i) = mean(vertcat(childResults.iaData{:}));
                     end
                 end
             end
@@ -106,6 +111,8 @@ classdef CamberVaryingTestSection < TestSection
             app.LatCamberLUTData.mzSamplePoints = app.LatCamberLUTData.mzSamplePoints(:, :, order);
             app.LatCamberLUTData.nfyVals = app.LatCamberLUTData.nfyVals(:, :, order);
             app.LatCamberLUTData.mzVals = app.LatCamberLUTData.mzVals(:, :, order);
+            app.LatCamberLUTData.alpha_adj = app.LatCamberLUTData.alpha_adj(order);
+            app.LatCamberLUTData.FY_adj = app.LatCamberLUTData.FY_adj(order);
             
             processingResults = struct();
         end
