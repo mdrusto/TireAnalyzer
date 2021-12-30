@@ -35,25 +35,25 @@ classdef CamberVaryingTestSection < TestSection
                 error('Matt error: no loads found in intermediate test section');
             end
             
-            app.LatCamberLUTData.saData = cell(nLoads, nTimes);
-            app.LatCamberLUTData.fzData = cell(nLoads, nTimes);
-            app.LatCamberLUTData.nfyData = cell(nLoads, nTimes);
-            app.LatCamberLUTData.mzData = cell(nLoads, nTimes);
-            app.LatCamberLUTData.nfyC = zeros(6, nLoads, nTimes);
-            app.LatCamberLUTData.mzC = zeros(6, nLoads, nTimes);
-            app.LatCamberLUTData.nfyExitFlags = zeros(nLoads, nTimes);
-            app.LatCamberLUTData.mzExitFlags = zeros(nLoads, nTimes);
-            app.LatCamberLUTData.nfySamplePoints = zeros(nSASample, nLoads, nTimes);
-            app.LatCamberLUTData.mzSamplePoints = zeros(nSASample, nLoads, nTimes);
-            app.LatCamberLUTData.nfyLoadPolyCoeff = 0;
-            app.LatCamberLUTData.mzLoadPolyCoeff = 0;
-            app.LatCamberLUTData.nfyVals = zeros(nSASample, nLoadSample, nTimes);
-            app.LatCamberLUTData.mzVals = zeros(nSASample, nLoadSample, nTimes);
-            app.LatCamberLUTData.meanLoads = zeros(nLoads, nTimes);
-            app.LatCamberLUTData.fzOptions = 0;
-            app.LatCamberLUTData.iaOptions = 0;
-            app.LatCamberLUTData.alpha_adj = cell(nTimes, 1);
-            app.LatCamberLUTData.FY_adj = cell(nTimes, 1);
+            % Create each global array in the LatCamberLUTData struct in the app class
+            app.LatCamberLUTData = struct( ...
+                'saData', {cell(nLoads, nTimes)}, ...
+                'fzData', {cell(nLoads, nTimes)}, ...
+                'nfyData', {cell(nLoads, nTimes)}, ...
+                'mzData', {cell(nLoads, nTimes)}, ...
+                'nfyC', {zeros(6, nLoads, nTimes)}, ...
+                'mzC', {zeros(6, nLoads, nTimes)}, ...
+                'nfyExitFlags', {zeros(nLoads, nTimes)}, ...
+                'mzExitFlags', {zeros(nLoads, nTimes)}, ...
+                'nfyLoadPolyCoeff', {0}, ...
+                'mzLoadPolyCoeff', {0}, ...
+                'nfyVals', {zeros(nSASample, nLoadSample, nTimes)}, ...
+                'mzVals', {zeros(nSASample, nLoadSample, nTimes)}, ...
+                'meanLoads', {zeros(nLoads, nTimes)}, ...
+                'fzOptions', {zeros(nLoads, 1)}, ...
+                'iaOptions', {zeros(nTimes, 1)}, ...
+                'alpha_adj', {cell(nTimes, 1)}, ...
+                'FY_adj', {cell(nTimes, 1)}); % If you don't make all the arguments single cells, it tries to make it a struct array
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -94,11 +94,14 @@ classdef CamberVaryingTestSection < TestSection
                 end
             end
             
+            % Round camber values to whole numbers
             iaOptions = round(iaOptions);
+            % Sort camber values and retrieve order for sorting the results
             [iaOptions, order] = sort(iaOptions);
             
             app.LatCamberLUTData.iaOptions = iaOptions;
             
+            % Reorder each array based on order of camber values (reorder2DCellDim2 is a custom function)
             app.LatCamberLUTData.saData = reorder2DCellDim2(app.LatCamberLUTData.saData, order);
             app.LatCamberLUTData.fzData = reorder2DCellDim2(app.LatCamberLUTData.fzData, order);
             app.LatCamberLUTData.nfyData = reorder2DCellDim2(app.LatCamberLUTData.nfyData, order);

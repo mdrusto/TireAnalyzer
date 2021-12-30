@@ -114,6 +114,8 @@ classdef IntermediateLevelCamberTestSection < TestSection
             mzExitFlags = mzExitFlags(:, order);
             nfyVals = nfyVals(:, :, order);
             mzVals = mzVals(:, :, order);
+            meanLoads = meanLoads(:, order);
+
             alpha_adj = alpha_adj(order);
             FY_adj = FY_adj(order);
             

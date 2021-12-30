@@ -101,7 +101,9 @@ classdef LoadsTestSection < TestSection
                 disp(meanLoads)
                 error('Matt error: not enough error between mean loads. See above info')
             end
-            fzOptions = round(meanLoads);
+            
+            % For the load options, round to nearest hundred
+            fzOptions = round(meanLoads, -2);
             
             % Reorder each array according to the test order of loads
             saData = saData(order);
