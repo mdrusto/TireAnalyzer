@@ -103,11 +103,11 @@ classdef IntermediateLevelCamberTestSection < TestSection
             [iaOptions, order] = sort(iaOptions);
             processingResults.iaOptions = iaOptions;
 
-            saData = reorder2DCellDim2(saData, order);
-            fzData = reorder2DCellDim2(fzData, order);
-            nfyData = reorder2DCellDim2(nfyData, order);
-            mzData = reorder2DCellDim2(mzData, order);
-            pData = pData(:, order);
+            saData = saData(order);
+            fzData = fzData(order);
+            nfyData = nfyData(order);
+            mzData = mzData(order);
+            pData = pData(order);
             nfySamplePoints = nfySamplePoints(:, :, order);
             mzSamplePoints = mzSamplePoints(:, :, order);
             nfyC = nfyC(:, :, order);

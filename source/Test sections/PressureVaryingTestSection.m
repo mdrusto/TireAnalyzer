@@ -105,10 +105,10 @@ classdef PressureVaryingTestSection < TestSection
             app.LatPressureLUTData.pOptions = pOptions;
             
             % Reorder arrays
-            app.LatPressureLUTData.saData = reorder2DCellDim2(app.LatPressureLUTData.saData, order);
-            app.LatPressureLUTData.fzData = reorder2DCellDim2(app.LatPressureLUTData.fzData, order);
-            app.LatPressureLUTData.nfyData = reorder2DCellDim2(app.LatPressureLUTData.nfyData, order);
-            app.LatPressureLUTData.mzData = reorder2DCellDim2(app.LatPressureLUTData.mzData, order);
+            app.LatPressureLUTData.saData = app.LatPressureLUTData.saData(:, order);
+            app.LatPressureLUTData.fzData = app.LatPressureLUTData.fzData(:, order);
+            app.LatPressureLUTData.nfyData = app.LatPressureLUTData.nfyData(:, order);
+            app.LatPressureLUTData.mzData = app.LatPressureLUTData.mzData(:, order);
             app.LatPressureLUTData.nfyC = app.LatPressureLUTData.nfyC(:, :, order);
             app.LatPressureLUTData.mzC = app.LatPressureLUTData.mzC(:, :, order);
             app.LatPressureLUTData.nfyExitFlags = app.LatPressureLUTData.nfyExitFlags(:, order);

@@ -104,6 +104,8 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                     end
                 end
             end
+
+
             
             % Display pressure in psi not kPa
             pOptions = pOptions * 0.145038;
@@ -114,10 +116,10 @@ classdef PressureVaryingTestSectionWCamber < TestSection
             
             app.LatLUTData.nfyVals = app.LatLUTData.nfyVals(:, :, :, order);
             app.LatLUTData.mzVals = app.LatLUTData.mzVals(:, :, :, order);
-            app.LatLUTData.saData = reorder3DCellDim3(app.LatLUTData.saData, order);
-            app.LatLUTData.fzData = reorder3DCellDim3(app.LatLUTData.fzData, order);
-            app.LatLUTData.nfyData = reorder3DCellDim3(app.LatLUTData.nfyData, order);
-            app.LatLUTData.mzData = reorder3DCellDim3(app.LatLUTData.mzData, order);
+            app.LatLUTData.saData = app.LatLUTData.saData(:, :, order);
+            app.LatLUTData.fzData = app.LatLUTData.fzData(:, :, order);
+            app.LatLUTData.nfyData = app.LatLUTData.nfyData(:, :, order);
+            app.LatLUTData.mzData = app.LatLUTData.mzData(:, :, order);
             app.LatLUTData.nfySamplePoints = app.LatLUTData.nfySamplePoints(:, :, :, order);
             app.LatLUTData.mzSamplePoints = app.LatLUTData.mzSamplePoints(:, :, :, order);
             app.LatLUTData.nfyC = app.LatLUTData.nfyC(:, :, :, order);

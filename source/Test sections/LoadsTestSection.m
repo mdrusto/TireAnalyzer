@@ -140,6 +140,7 @@ classdef LoadsTestSection < TestSection
                 
                 % Set reference load and lateral force function on first iteration
                 if i == 1
+
                     refFZ = fz_bar;
                     % Together the refSA and refFY variables represent the Fy0 reference function
                     refSA = saData{1};
@@ -148,12 +149,12 @@ classdef LoadsTestSection < TestSection
 
                     %Cornering Stiffness of refFY
                     
-                    linearRegionSAIndices = abs(refSA) < 1;
-                    linearRegionSA = refSA(linearRegionSAIndices);
+                    linearRegionIndices = abs(refSA) < 1;
+                    linearRegionSA = refSA(linearRegionIndices);
                     
-                    linearRegionFY = refFY(linearRegionSAIndices);
+                    linearRegionFY = refFY(linearRegionIndices);
                     
-                    linearRegionMZ = refMZ(linearRegionSAIndices);
+                    linearRegionMZ = refMZ(linearRegionIndices);
                     
                     coeff_refFY = polyfit(linearRegionSA, linearRegionFY, 1); % Tangent line at x,y
                     cornerStiff_refFY = coeff_refFY(1); % Slope of line is cornering stiffness (C_Fao)
@@ -171,20 +172,28 @@ classdef LoadsTestSection < TestSection
                     alpha_adj(:, 1) = refSA;
                     FY_adj(:, 1) = refFY;
                     MZ_adj(:, 1) = refMZ;
+
                 else
+
                     %Cornering Stiffness of FY_adj
-                    linearRegionFYSAIndices = abs(saData{i}) > 1;
-                    linearRegionFYSA = saData{i}(linearRegionFYSAIndices);
-                    linearRegionFY = fyData{i}(linearRegionFYSAIndices);
-                    coeff_FY_adj = polyfit(linearRegionFYSA, linearRegionFY, 1);
+                    linearRegionIndices = abs(saData{i}) < 1;
+                    linearRegionSA = saData{i}(linearRegionIndices);
+                    linearRegionFY = fyData{i}(linearRegionIndices);
+                    linearRegionMZ = mzData{i}(linearRegionIndices);
+
+                    coeff_FY_adj = polyfit(linearRegionSA, linearRegionFY, 1);
                     cornerStiff_FY_adj = coeff_FY_adj(1); % C_Fa(Fz)
                     
+                    coeff_MZ_adj = polyfit(linearRegionSA, linearRegionMZ, 1);
+                    cornerStiff_MZ_adj = coeff_MZ_adj(1); % C_Ma(Fz)
+                    
                     % Eqn 4.4
-                    alpha_adj(:, i) = (cornerStiff_FY_adj / cornerStiff_refFY) * (refFZ / fz_bar) .* refSA; %#ok<AGROW> 
+                    alpha_adj(:, i) = (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA; %#ok<AGROW> 
                     % Eqn 4.1
-                    FY_adj(:, i) = (refFZ / fz_bar) .* refFY; %#ok<AGROW> 
+                    FY_adj(:, i) = (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
                     % Eqn 4.5
-                    MZ_adj(:, i) = (refFZ / fz_bar) * (cornerStiff_FY_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
+                    MZ_adj(:, i) = (fz_bar / refFZ) * (cornerStiff_MZ_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
+
                 end
                 
             end
