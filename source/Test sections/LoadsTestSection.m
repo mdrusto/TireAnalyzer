@@ -44,6 +44,7 @@ classdef LoadsTestSection < TestSection
             mzVals = zeros(nSASample, nLoadSample);
             saData = cell(nTimes, 1);
             fzData = cell(nTimes, 1);
+            fyData = cell(nTimes, 1);
             nfyData = cell(nTimes, 1);
             mzData = cell(nTimes, 1);
             iaData = cell(nTimes, 1);
@@ -53,9 +54,10 @@ classdef LoadsTestSection < TestSection
             nfyExitFlags = zeros(nTimes, 1);
             mzExitFlags = zeros(nTimes, 1);
             
-            % These are arrays, but we only set them once we know the size, which we need to know the # of data points for
+            % These will be arrays, but we only set them once we know the size, which we need to know the # of data points for
             alpha_adj = 0;
             FY_adj = 0;
+            MZ_adj = 0;
             
             for i = 1:nTimes
                 foundSweep = false;
@@ -72,6 +74,7 @@ classdef LoadsTestSection < TestSection
                         mzSamplePoints(:, i) = childResults.mzSamplePoints;
                         saData{i} = childResults.saData;
                         fzData{i} = childResults.fzData;
+                        fyData{i} = childResults.nfyData .* childResults.fzData;
                         nfyData{i} = childResults.nfyData;
                         mzData{i} = childResults.mzData;
                         iaData{i} = childResults.iaData;
@@ -108,6 +111,7 @@ classdef LoadsTestSection < TestSection
             % Reorder each array according to the test order of loads
             saData = saData(order);
             fzData = fzData(order);
+            fyData = fyData(order);
             nfyData = nfyData(order);
             mzData = mzData(order);
             iaData = iaData(order);
@@ -138,16 +142,51 @@ classdef LoadsTestSection < TestSection
                 if i == 1
                     refFZ = fz_bar;
                     % Together the refSA and refFY variables represent the Fy0 reference function
-                    refSA = saData{1, 1};
-                    refFY = nfyData{1, 1} .* fzData{1, 1}; % FY isn't saved in SASweepTestSection but can be calculated
+                    refSA = saData{1};
+                    refFY = fyData{1}; % FY isn't saved in SASweepTestSection but can be calculated
+                    refMZ = mzData{1};
+
+                    %Cornering Stiffness of refFY
+                    
+                    linearRegionSAIndices = abs(refSA) < 1;
+                    linearRegionSA = refSA(linearRegionSAIndices);
+                    
+                    linearRegionFY = refFY(linearRegionSAIndices);
+                    
+                    linearRegionMZ = refMZ(linearRegionSAIndices);
+                    
+                    coeff_refFY = polyfit(linearRegionSA, linearRegionFY, 1); % Tangent line at x,y
+                    cornerStiff_refFY = coeff_refFY(1); % Slope of line is cornering stiffness (C_Fao)
+                    
+                    coeff_refMZ = polyfit(linearRegionSA, linearRegionMZ, 1);
+                    cornerStiff_refMZ = coeff_refMZ(1);
+                    
                     % Set the size of the alpha_eq and FY_adj arrays
                     nData = length(refSA);
                     alpha_adj = zeros(nData, nTimes);
                     FY_adj = zeros(nData, nTimes);
+                    MZ_adj = zeros(nData, nTimes);
+                    
+                    % For the first iteration, the values in the adj arrays are just the reference functions
+                    alpha_adj(:, 1) = refSA;
+                    FY_adj(:, 1) = refFY;
+                    MZ_adj(:, 1) = refMZ;
+                else
+                    %Cornering Stiffness of FY_adj
+                    linearRegionFYSAIndices = abs(saData{i}) > 1;
+                    linearRegionFYSA = saData{i}(linearRegionFYSAIndices);
+                    linearRegionFY = fyData{i}(linearRegionFYSAIndices);
+                    coeff_FY_adj = polyfit(linearRegionFYSA, linearRegionFY, 1);
+                    cornerStiff_FY_adj = coeff_FY_adj(1); % C_Fa(Fz)
+                    
+                    % Eqn 4.4
+                    alpha_adj(:, i) = (cornerStiff_FY_adj / cornerStiff_refFY) * (refFZ / fz_bar) .* refSA; %#ok<AGROW> 
+                    % Eqn 4.1
+                    FY_adj(:, i) = (refFZ / fz_bar) .* refFY; %#ok<AGROW> 
+                    % Eqn 4.5
+                    MZ_adj(:, i) = (refFZ / fz_bar) * (cornerStiff_FY_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
                 end
                 
-                alpha_adj(:, i) = (refFZ / fz_bar) .* refSA; %#ok<AGROW> 
-                FY_adj(:, i) = (refFZ / fz_bar) .* refFY; %#ok<AGROW> 
             end
             
             processingResults.saData = saData;
@@ -171,6 +210,7 @@ classdef LoadsTestSection < TestSection
             
             processingResults.alpha_adj = alpha_adj;
             processingResults.FY_adj = FY_adj;
+            processingResults.MZ_adj = MZ_adj;
         end
     end
 end

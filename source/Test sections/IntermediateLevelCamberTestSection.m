@@ -56,6 +56,7 @@ classdef IntermediateLevelCamberTestSection < TestSection
             
             alpha_adj = cell(nTimes, 1);
             FY_adj = cell(nTimes, 1);
+            MZ_adj = cell(nTimes, 1);
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -84,6 +85,7 @@ classdef IntermediateLevelCamberTestSection < TestSection
                         
                         alpha_adj{i} = childResults.alpha_adj;
                         FY_adj{i} = childResults.FY_adj;
+                        MZ_adj{i} = childResults.MZ_adj;
                         
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
@@ -118,6 +120,7 @@ classdef IntermediateLevelCamberTestSection < TestSection
 
             alpha_adj = alpha_adj(order);
             FY_adj = FY_adj(order);
+            MZ_adj = MZ_adj(order);
             
             processingResults.saData = saData;
             processingResults.fzData = fzData;
@@ -139,6 +142,7 @@ classdef IntermediateLevelCamberTestSection < TestSection
             processingResults.iaOptions = iaOptions;
             processingResults.alpha_adj = alpha_adj;
             processingResults.FY_adj = FY_adj;
+            processingResults.MZ_adj = MZ_adj;
         end
     end
 end

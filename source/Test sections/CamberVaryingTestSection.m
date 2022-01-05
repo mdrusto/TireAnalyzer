@@ -53,7 +53,8 @@ classdef CamberVaryingTestSection < TestSection
                 'fzOptions', {zeros(nLoads, 1)}, ...
                 'iaOptions', {zeros(nTimes, 1)}, ...
                 'alpha_adj', {cell(nTimes, 1)}, ...
-                'FY_adj', {cell(nTimes, 1)}); % If you don't make all the arguments single cells, it tries to make it a struct array
+                'FY_adj', {cell(nTimes, 1)}, ...
+                'MZ_adj', {cell(nTimes, 1)}); % If you don't make all the arguments single cells, it tries to make it a struct array
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -79,6 +80,7 @@ classdef CamberVaryingTestSection < TestSection
                         app.LatCamberLUTData.fzOptions = childResults.fzOptions;
                         app.LatCamberLUTData.alpha_adj{i} = childResults.alpha_adj;
                         app.LatCamberLUTData.FY_adj{i} = childResults.FY_adj;
+                        app.LatCamberLUTData.MZ_adj{i} = childResults.MZ_adj;
                         
                         iaOptions(i) = mean(vertcat(childResults.iaData{:}));
                         
@@ -116,6 +118,7 @@ classdef CamberVaryingTestSection < TestSection
             app.LatCamberLUTData.mzVals = app.LatCamberLUTData.mzVals(:, :, order);
             app.LatCamberLUTData.alpha_adj = app.LatCamberLUTData.alpha_adj(order);
             app.LatCamberLUTData.FY_adj = app.LatCamberLUTData.FY_adj(order);
+            app.LatCamberLUTData.MZ_adj = app.LatCamberLUTData.MZ_adj(order);
             
             processingResults = struct();
         end

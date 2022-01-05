@@ -42,7 +42,8 @@ classdef PressureVaryingTestSectionWCamber < TestSection
             if ~foundCamber
                 error('Matt error: no loads found in intermediate test section');
             end
-
+            
+            % If you don't make all the arguments single cells, it tries to make it a struct array
             app.LatLUTData = struct( ...
                 'saData', {cell(nLoads, nCamber, nTimes)}, ...
                 'fzData', {cell(nLoads, nCamber, nTimes)}, ...
@@ -61,10 +62,10 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                 'iaOptions', {zeros(nCamber, 1)}, ...
                 'pOptions', {zeros(nTimes, 1)}, ...
                 'alpha_adj', {cell(nCamber, nTimes)}, ...
-                'FY_adj', {cell(nCamber, nTimes)}); % If you don't make all the arguments single cells, it tries to make it a struct array
+                'FY_adj', {cell(nCamber, nTimes)}, ...
+                'MZ_adj', {cell(nCamber, nTimes)});
             
             for i = 1:nTimes
-                %disp(['Pressure #' num2str(i)])
                 for j = 1:nTests
                     test = obj.Children(j);
                     childResults = childrenResults{j}(i);
@@ -87,6 +88,7 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                         app.LatLUTData.iaOptions = childResults.iaOptions;
                         app.LatLUTData.alpha_adj(:, i) = childResults.alpha_adj;
                         app.LatLUTData.FY_adj(:, i) = childResults.FY_adj;
+                        app.LatLUTData.MZ_adj(:, i) = childResults.MZ_adj;
                         
                         pOptions(i) = mean(vertcat(childResults.pData{:}));
                         
@@ -124,8 +126,9 @@ classdef PressureVaryingTestSectionWCamber < TestSection
             app.LatLUTData.mzExitFlags = app.LatLUTData.mzExitFlags(:, :, order);
             app.LatLUTData.meanLoads = app.LatLUTData.meanLoads(:, :, order);
 
-            app.LatLUTData.alpha_adj = app.LatLUTData.alpha_adj(order);
-            app.LatLUTData.FY_adj = app.LatLUTData.FY_adj(order);
+            app.LatLUTData.alpha_adj = reorder2DCellDim2(app.LatLUTData.alpha_adj, order);
+            app.LatLUTData.FY_adj = reorder2DCellDim2(app.LatLUTData.FY_adj, order);
+            app.LatLUTData.MZ_adj = reorder2DCellDim2(app.LatLUTData.MZ_adj, order);
             
             processingResults = struct();
         end

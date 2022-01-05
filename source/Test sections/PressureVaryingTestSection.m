@@ -53,7 +53,8 @@ classdef PressureVaryingTestSection < TestSection
                 'fzOptions', {zeros(nLoads, 1)}, ...
                 'iaOptions', {zeros(nTimes, 1)}, ...
                 'alpha_adj', {cell(nTimes, 1)}, ...
-                'FY_adj', {cell(nTimes, 1)}); % If you don't make all the arguments single cells, it tries to make it a struct array
+                'FY_adj', {cell(nTimes, 1)}, ...
+                'MZ_adj', {cell(nTimes, 1)}); % If you don't make all the arguments single cells, it tries to make it a struct array
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -79,6 +80,7 @@ classdef PressureVaryingTestSection < TestSection
                         app.LatPressureLUTData.fzOptions = childResults.fzOptions;
                         app.LatPressureLUTData.alpha_adj{i} = childResults.alpha_adj;
                         app.LatPressureLUTData.FY_adj{i} = childResults.FY_adj;
+                        app.LatPressureLUTData.MZ_adj{i} = childResults.MZ_adj;
                         
                         pOptions(i) = mean(vertcat(childResults.pData{:}));
                         
@@ -117,6 +119,7 @@ classdef PressureVaryingTestSection < TestSection
             app.LatPressureLUTData.mzVals = app.LatPressureLUTData.mzVals(:, :, order);
             app.LatPressureLUTData.alpha_adj = app.LatPressureLUTData.alpha_adj(order);
             app.LatPressureLUTData.FY_adj = app.LatPressureLUTData.FY_adj(order);
+            app.LatPressureLUTData.MZ_adj = app.LatPressureLUTData.MZ_adj(order);
             
             % Create empty return struct since it won't be used (top level in app class discards it)
             processingResults = struct();
