@@ -15,6 +15,7 @@ classdef PressureVaryingTestSectionWCamber < TestSection
         end
         
         function processingResults = processData(obj, app, ~, childrenResults, runOpts)
+
             nTimes = obj.BFinder.getN();
             nTests = length(obj.Children);
             nCamber = 0;
@@ -71,6 +72,7 @@ classdef PressureVaryingTestSectionWCamber < TestSection
                     childResults = childrenResults{j}(i);
                 
                     if isa(test, 'IntermediateLevelCamberTestSection')
+                        %size(childResults.saData)
                         app.LatLUTData.saData(:, :, i) = childResults.saData;
                         app.LatLUTData.fzData(:, :, i) = childResults.fzData;
                         app.LatLUTData.nfyData(:, :, i) = childResults.nfyData;
