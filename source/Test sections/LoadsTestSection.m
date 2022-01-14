@@ -137,11 +137,13 @@ classdef LoadsTestSection < TestSection
 
             for i = 1:nTimes
                 fz_bar = mean(fzData{i});
+                maxNFY = max(abs(nfyData{i}));
                 
                 % Set reference load and lateral force function on first iteration
                 if i == 1
 
                     refFZ = fz_bar;
+                    refNFY = maxNFY;
                     % Together the refSA and refFY variables represent the Fy0 reference function
                     refSA = saData{1};
                     refFY = fyData{1}; % FY isn't saved in SASweepTestSection but can be calculated
@@ -180,20 +182,21 @@ classdef LoadsTestSection < TestSection
                     linearRegionSA = saData{i}(linearRegionIndices);
                     linearRegionFY = fyData{i}(linearRegionIndices);
                     linearRegionMZ = mzData{i}(linearRegionIndices);
-
+                    
                     coeff_FY_adj = polyfit(linearRegionSA, linearRegionFY, 1);
                     cornerStiff_FY_adj = coeff_FY_adj(1); % C_Fa(Fz)
                     
                     coeff_MZ_adj = polyfit(linearRegionSA, linearRegionMZ, 1);
                     cornerStiff_MZ_adj = coeff_MZ_adj(1); % C_Ma(Fz)
-                    
-                    % Eqn 4.4
-                    alpha_adj(:, i) = (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA; %#ok<AGROW> 
-                    % Eqn 4.1
-                    FY_adj(:, i) = (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
+
+                                    
+                    % Eqn 4.4 
+                    alpha_adj(:, i) = (maxNFY / refNFY) * (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA; %#ok<AGROW> 
+                    % Eqn 4.1 
+                    FY_adj(:, i) = (refNFY / maxNFY) * (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
                     % Eqn 4.5
                     MZ_adj(:, i) = (fz_bar / refFZ) * (cornerStiff_MZ_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
-
+                    % Eqn 4.17
                 end
                 
             end
