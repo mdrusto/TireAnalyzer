@@ -57,6 +57,8 @@ classdef IntermediateLevelCamberTestSection < TestSection
             alpha_adj = cell(nTimes, 1);
             FY_adj = cell(nTimes, 1);
             MZ_adj = cell(nTimes, 1);
+            camberShiftFY = zeros(nLoads, 1);
+            camberShiftMZ = zeros(nLoads, 1);
             
             for i = 1:nTimes
                 for j = 1:nTests
@@ -86,6 +88,9 @@ classdef IntermediateLevelCamberTestSection < TestSection
                         alpha_adj{i} = childResults.alpha_adj;
                         FY_adj{i} = childResults.FY_adj;
                         MZ_adj{i} = childResults.MZ_adj;
+                        
+                        camberShiftFY = childResutls.camberShiftFY;
+                        camberShiftMZ = childResults.camberShiftMZ;
                         
                         retNfyLoadPolyCoeff = childResults.nfyLoadPolyCoeff;
                         nLoadCoeff = size(retNfyLoadPolyCoeff, 1);
@@ -143,6 +148,8 @@ classdef IntermediateLevelCamberTestSection < TestSection
             processingResults.alpha_adj = alpha_adj;
             processingResults.FY_adj = FY_adj;
             processingResults.MZ_adj = MZ_adj;
+            processingResults.camberShiftFY = camberShiftFY;
+            processingResults.camberSHiftMZ = camberShiftMZ;
         end
     end
 end

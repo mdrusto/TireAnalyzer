@@ -58,6 +58,9 @@ classdef LoadsTestSection < TestSection
             alpha_adj = 0;
             FY_adj = 0;
             MZ_adj = 0;
+
+            camberShiftFY = zeros(nTimes, 1);
+            camberShiftMZ = zeros(nTimes, 1);
             
             for i = 1:nTimes
                 foundSweep = false;
@@ -83,7 +86,7 @@ classdef LoadsTestSection < TestSection
                         mzC(:, i) = childResults.mzC;
                         nfyExitFlags(i) = childResults.nfyExitFlag;
                         mzExitFlags(i) = childResults.mzExitFlag;
-                        
+                                
                         meanLoads(i) = mean(childResults.fzData);
                         assert(isscalar(mean(childResults.fzData)), 'size of mean is not singular')
 
@@ -164,6 +167,9 @@ classdef LoadsTestSection < TestSection
                     coeff_refMZ = polyfit(linearRegionSA, linearRegionMZ, 1);
                     cornerStiff_refMZ = coeff_refMZ(1);
                     
+                    camberShiftFY(i) = coeff_refFY(2); %shift for side force
+                    camberShiftMZ(i) = coeff_refMZ(2); %shift for aligning torque
+
                     % Set the size of the alpha_eq and FY_adj arrays
                     nData = length(refSA);
                     alpha_adj = zeros(nData, nTimes);
@@ -189,16 +195,21 @@ classdef LoadsTestSection < TestSection
                     coeff_MZ_adj = polyfit(linearRegionSA, linearRegionMZ, 1);
                     cornerStiff_MZ_adj = coeff_MZ_adj(1); % C_Ma(Fz)
 
+                    camberShiftFY(i) = coeff_FY_adj(2); %shift for side force
+                    camberShiftMZ(i) = coeff_MZ_adj(2); %shift for aligning torque
                                     
                     % Eqn 4.4 
-                    alpha_adj(:, i) = (maxNFY / refNFY) * (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA; %#ok<AGROW> 
+                    alpha_adj(:, i) = ((refNFY / maxNFY) * (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA) + camberShiftFY(i); %#ok<AGROW> 
                     % Eqn 4.1 
-                    FY_adj(:, i) = (refNFY / maxNFY) * (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
+                    FY_adj(:, i) = (maxNFY / refNFY) * (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
                     % Eqn 4.5
-                    MZ_adj(:, i) = (fz_bar / refFZ) * (cornerStiff_MZ_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
+                    MZ_adj(:, i) = (maxNFY / refNFY) * (fz_bar / refFZ) * (cornerStiff_MZ_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
                     % Eqn 4.17
                 end
                 
+                %
+
+
             end
             
             processingResults.saData = saData;
@@ -223,6 +234,8 @@ classdef LoadsTestSection < TestSection
             processingResults.alpha_adj = alpha_adj;
             processingResults.FY_adj = FY_adj;
             processingResults.MZ_adj = MZ_adj;
+            processingResults.camberShiftFY = camberShiftFY;
+            processingResults.camberShiftMZ = camberShiftMZ;
         end
     end
 end
