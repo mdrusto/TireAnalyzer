@@ -27,7 +27,7 @@ jobs:
 
       # Set up MATLAB
       - name: Set up MATLAB
-        run: matlab-actions/setup-matlab@v1
+        uses: matlab-actions/setup-matlab@v1
 
       # Run MATLAB script
       - name: Run script
