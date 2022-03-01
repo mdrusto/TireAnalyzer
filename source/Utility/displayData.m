@@ -1,7 +1,7 @@
 % Script to display the data for a single tire data file
 
-fileName = 'tire_data/B1965raw2.mat';
-runNumCell = extractBetween(fileName, 'raw', '.');
+fileName = 'tire_data/B1051run3.mat';
+runNumCell = extractBetween(fileName, 'run', '.');
 runNum = runNumCell{1};
 
 data = load(fileName);

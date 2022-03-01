@@ -44,8 +44,8 @@ classdef LoadsTestSection < TestSection
             mzVals = zeros(nSASample, nLoadSample);
             saData = cell(nTimes, 1);
             fzData = cell(nTimes, 1);
-            fyData = cell(nTimes, 1);
             nfyData = cell(nTimes, 1);
+            fyData = cell(nTimes, 1);
             mzData = cell(nTimes, 1);
             iaData = cell(nTimes, 1);
             pData = cell(nTimes, 1);
@@ -54,6 +54,11 @@ classdef LoadsTestSection < TestSection
             nfyExitFlags = zeros(nTimes, 1);
             mzExitFlags = zeros(nTimes, 1);
             
+            % We have to save these now, because they are needed in the camber file
+            cornerStiff_FY_adj = zeros(nTimes, 1);
+            cornerStiff_MZ_adj = zeros(nTimes, 1);
+            fz_bar = zeros(nTimes, 1);
+            maxNFY = zeros(nTimes, 1);
             % These will be arrays, but we only set them once we know the size, which we need to know the # of data points for
             alpha_adj = 0;
             FY_adj = 0;
@@ -114,8 +119,8 @@ classdef LoadsTestSection < TestSection
             % Reorder each array according to the test order of loads
             saData = saData(order);
             fzData = fzData(order);
-            fyData = fyData(order);
             nfyData = nfyData(order);
+            fyData = fyData(order);
             mzData = mzData(order);
             iaData = iaData(order);
             pData = pData(order);
@@ -139,82 +144,31 @@ classdef LoadsTestSection < TestSection
             % Do this after everything has been sorted according to load order instead of inside the main loop
 
             for i = 1:nTimes
-                fz_bar = mean(fzData{i});
-                maxNFY = max(abs(nfyData{i}));
+
+                fz_bar(i) = mean(fzData{i});
+                maxNFY(i) = max(abs(nfyData{i}));
+
+                %Cornering Stiffness of FY_adj
+                linearRegionIndices = abs(saData{i}) < 1;
+                linearRegionSA = saData{i}(linearRegionIndices);
+                linearRegionFY = fyData{i}(linearRegionIndices);
+                linearRegionMZ = mzData{i}(linearRegionIndices);
                 
-                % Set reference load and lateral force function on first iteration
-                if i == 1
-
-                    refFZ = fz_bar;
-                    refNFY = maxNFY;
-                    % Together the refSA and refFY variables represent the Fy0 reference function
-                    refSA = saData{1};
-                    refFY = fyData{1}; % FY isn't saved in SASweepTestSection but can be calculated
-                    refMZ = mzData{1};
-
-                    %Cornering Stiffness of refFY
-                    
-                    linearRegionIndices = abs(refSA) < 1;
-                    linearRegionSA = refSA(linearRegionIndices);
-                    
-                    linearRegionFY = refFY(linearRegionIndices);
-                    
-                    linearRegionMZ = refMZ(linearRegionIndices);
-                    
-                    coeff_refFY = polyfit(linearRegionSA, linearRegionFY, 1); % Tangent line at x,y
-                    cornerStiff_refFY = coeff_refFY(1); % Slope of line is cornering stiffness (C_Fao)
-                    
-                    coeff_refMZ = polyfit(linearRegionSA, linearRegionMZ, 1);
-                    cornerStiff_refMZ = coeff_refMZ(1);
-                    
-                    camberShiftFY(i) = coeff_refFY(2); %shift for side force
-                    camberShiftMZ(i) = coeff_refMZ(2); %shift for aligning torque
-
-                    % Set the size of the alpha_eq and FY_adj arrays
-                    nData = length(refSA);
-                    alpha_adj = zeros(nData, nTimes);
-                    FY_adj = zeros(nData, nTimes);
-                    MZ_adj = zeros(nData, nTimes);
-                    
-                    % For the first iteration, the values in the adj arrays are just the reference functions
-                    alpha_adj(:, 1) = refSA;
-                    FY_adj(:, 1) = refFY;
-                    MZ_adj(:, 1) = refMZ;
-
-                else
-
-                    %Cornering Stiffness of FY_adj
-                    linearRegionIndices = abs(saData{i}) < 1;
-                    linearRegionSA = saData{i}(linearRegionIndices);
-                    linearRegionFY = fyData{i}(linearRegionIndices);
-                    linearRegionMZ = mzData{i}(linearRegionIndices);
-                    
-                    coeff_FY_adj = polyfit(linearRegionSA, linearRegionFY, 1);
-                    cornerStiff_FY_adj = coeff_FY_adj(1); % C_Fa(Fz)
-                    
-                    coeff_MZ_adj = polyfit(linearRegionSA, linearRegionMZ, 1);
-                    cornerStiff_MZ_adj = coeff_MZ_adj(1); % C_Ma(Fz)
-
-                    camberShiftFY(i) = coeff_FY_adj(2); %shift for side force
-                    camberShiftMZ(i) = coeff_MZ_adj(2); %shift for aligning torque
-                                    
-                    % Eqn 4.4 
-                    alpha_adj(:, i) = ((refNFY / maxNFY) * (cornerStiff_refFY / cornerStiff_FY_adj) * (fz_bar / refFZ) .* refSA) + camberShiftFY(i); %#ok<AGROW> 
-                    % Eqn 4.1 
-                    FY_adj(:, i) = (maxNFY / refNFY) * (fz_bar / refFZ) .* refFY; %#ok<AGROW> 
-                    % Eqn 4.5
-                    MZ_adj(:, i) = (maxNFY / refNFY) * (fz_bar / refFZ) * (cornerStiff_MZ_adj / cornerStiff_refMZ) * (cornerStiff_refFY / cornerStiff_FY_adj) .* refMZ; %#ok<AGROW> 
-                    % Eqn 4.17
-                end
+                coeff_FY_adj = polyfit(linearRegionSA, linearRegionFY, 1);
+                cornerStiff_FY_adj(i) = coeff_FY_adj(1); % C_Fa(Fz)
                 
-                %
+                coeff_MZ_adj = polyfit(linearRegionSA, linearRegionMZ, 1);
+                cornerStiff_MZ_adj(i) = coeff_MZ_adj(1); % C_Ma(Fz)
 
+                camberShiftFY(i) = coeff_FY_adj(2); %shift for side force
+                camberShiftMZ(i) = coeff_MZ_adj(2); %shift for aligning torque
 
             end
             
             processingResults.saData = saData;
             processingResults.fzData = fzData;
             processingResults.nfyData = nfyData;
+            processingResults.fyData = fyData;
             processingResults.mzData = mzData;
             processingResults.iaData = iaData;
             processingResults.pData = pData;
@@ -234,6 +188,10 @@ classdef LoadsTestSection < TestSection
             processingResults.alpha_adj = alpha_adj;
             processingResults.FY_adj = FY_adj;
             processingResults.MZ_adj = MZ_adj;
+            processingResults.cornerStiff_FY_adj = cornerStiff_FY_adj;
+            processingResults.cornerStiff_MZ_adj = cornerStiff_MZ_adj;
+            processingResults.fz_bar = fz_bar;
+            processingResults.maxNFY = maxNFY;
             processingResults.camberShiftFY = camberShiftFY;
             processingResults.camberShiftMZ = camberShiftMZ;
         end
