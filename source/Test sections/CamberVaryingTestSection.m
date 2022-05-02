@@ -51,6 +51,8 @@ classdef CamberVaryingTestSection < TestSection
             mzExitFlags = zeros(nLoads, nIncAngles);
             nfyLoadPolyCoeff = 0;
             mzLoadPolyCoeff = 0;
+            nfySamplePoints = zeros(nSASample, nLoads, nIncAngles);
+            mzSamplePoints = zeros(nSASample, nLoads, nIncAngles);
             nfyVals = zeros(nSASample, nLoadSample, nIncAngles);
             mzVals = zeros(nSASample, nLoadSample, nIncAngles);
             meanLoads = zeros(nLoads, nIncAngles);
@@ -111,8 +113,8 @@ classdef CamberVaryingTestSection < TestSection
                             nfyLoadPolyCoeff = zeros(nLoadCoeff, nSASample, nIncAngles);
                             mzLoadPolyCoeff = zeros(nLoadCoeff, nSASample, nIncAngles);
                         end
-                        nfyLoadPolyCoeff(:, :, i) = childResults.nfyLoadPolyCoeff;
-                        mzLoadPolyCoeff(:, :, i) = childResults.mzLoadPolyCoeff;
+                        nfyLoadPolyCoeff(:, :, i) = childResults.nfyLoadPolyCoeff; %#ok<AGROW>
+                        mzLoadPolyCoeff(:, :, i) = childResults.mzLoadPolyCoeff; %#ok<AGROW>
                     end
                 end
             end
